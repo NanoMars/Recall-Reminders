@@ -9,10 +9,12 @@ import SwiftUI
 
 @main
 struct Reminders_AppApp: App {
+    @StateObject var manager =  ReminderManager()
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
     }
 }
+
 

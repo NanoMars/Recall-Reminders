@@ -13,12 +13,30 @@ class ReminderManager: ObservableObject {
     
     let saveKey = "reminders"
     
+    init() {
+        loadReminders()
+        addReminder(reminder: Reminder(
+                name: "test",
+                iconName: "tshirt.fill",
+                colour: RGBColor(
+                    r: 255,
+                    g: 0,
+                    b: 0
+                ),
+                startDate: Date(),
+                goalDate: Date().addingTimeInterval(120)
+            )
+        )
+    }
+    
     func addReminder(reminder: Reminder) {
         reminders.append(reminder)
+        saveReminders()
     }
     
     func removeReminder(id: UUID) {
         reminders.removeAll { $0.id == id}
+        saveReminders()
     }
     
     private func saveReminders() {
