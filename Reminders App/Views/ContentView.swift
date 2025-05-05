@@ -9,20 +9,80 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject var manager =  ReminderManager()
+    @Environment(\.colorScheme) var colorScheme
+    
+    var bottomArea: CGFloat = 80
+    var reminderPadding: CGFloat = 15
+    
+    var bottomSafeArea: CGFloat {
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first { $0.isKeyWindow }?
+            .safeAreaInsets.bottom ?? 0
+    }
+    
+    var topSafeArea: CGFloat {
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first { $0.isKeyWindow }?
+            .safeAreaInsets.top ?? 0
+    }
+    
     var body: some View {
-        ScrollView {
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
-                ForEach(manager.reminders) { reminder in
-                    CircularProgressBar(
-                        originalDate: reminder.startDate,
-                        goalDate: reminder.goalDate,
-                        selectedIconName: reminder.iconName,
-                        colour: convertToColor(rgb: reminder.colour)
+        ZStack(alignment: .bottom) {
+            ScrollView {
+                // add a spacer here at topsafearea size
+                Color.clear
+                    .frame(height: topSafeArea)
+                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
+                    ForEach(manager.reminders) { reminder in
+                        CircularProgressBar(
+                            originalDate: reminder.startDate,
+                            goalDate: reminder.goalDate,
+                            selectedIconName: reminder.iconName,
+                            colour: convertToColor(rgb: reminder.colour)
                         )
+                    }
                 }
             }
+            
+            .padding([.top, .leading, .trailing], reminderPadding)
+            .padding(.bottom, bottomArea + bottomSafeArea)
+            .ignoresSafeArea(edges: .top)
+            
+            
+            ZStack {
+                Rectangle()
+                    .fill(colorScheme == .dark ? .black : .white)
+                    .frame(height: bottomArea + bottomSafeArea)
+                    .frame(maxWidth: .infinity)
+                    .ignoresSafeArea(edges: .bottom)
+                    .shadow(radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
+                HStack(alignment: .center) {
+                    Button(action: {
+                        
+                    }) {
+                        ZStack{
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(Color.green)
+                                .frame(width: 50.0, height: 50.0)
+                                .shadow(radius: 5)
+                            Image(systemName: "plus")
+                                .resizable(resizingMode: .stretch)
+                                .frame(width: 30.0, height: 30.0)
+                                .foregroundStyle(.white)
+                        }
+
+                    }
+                    
+                    
+                }
+                .padding(.bottom, bottomSafeArea)
+            }
         }
-        .padding(.all, 15.0)
+        .ignoresSafeArea(edges: .bottom)
     }
 }
 

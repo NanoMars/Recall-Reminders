@@ -10,6 +10,7 @@ import SwiftUI
 
 class ReminderManager: ObservableObject {
     @Published var reminders: [Reminder] = []
+    @Environment(\.colorScheme) var colorScheme
     
     let saveKey = "reminders"
     
