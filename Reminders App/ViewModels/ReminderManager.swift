@@ -16,18 +16,6 @@ class ReminderManager: ObservableObject {
     
     init() {
         loadReminders()
-        addReminder(reminder: Reminder(
-                name: "test",
-                iconName: "tshirt.fill",
-                colour: RGBColor(
-                    r: 255,
-                    g: 0,
-                    b: 0
-                ),
-                startDate: Date(),
-                goalDate: Date().addingTimeInterval(120)
-            )
-        )
     }
     
     func addReminder(reminder: Reminder) {

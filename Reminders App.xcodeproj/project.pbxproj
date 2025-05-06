@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		77DDAD4A2DC9A75A00333262 /* SymbolPicker in Frameworks */ = {isa = PBXBuildFile; productRef = 77DDAD492DC9A75A00333262 /* SymbolPicker */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		775F8C2A2DC73D09001B0FFF /* Reminders App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Reminders App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77DDAD4A2DC9A75A00333262 /* SymbolPicker in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +70,7 @@
 			);
 			name = "Reminders App";
 			packageProductDependencies = (
+				77DDAD492DC9A75A00333262 /* SymbolPicker */,
 			);
 			productName = "Reminders App";
 			productReference = 775F8C2A2DC73D09001B0FFF /* Reminders App.app */;
@@ -94,6 +100,9 @@
 			);
 			mainGroup = 775F8C212DC73D09001B0FFF;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				77DDAD482DC9A75A00333262 /* XCRemoteSwiftPackageReference "SymbolPicker" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 775F8C2B2DC73D09001B0FFF /* Products */;
 			projectDirPath = "";
@@ -324,6 +333,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		77DDAD482DC9A75A00333262 /* XCRemoteSwiftPackageReference "SymbolPicker" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/xnth97/SymbolPicker";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		77DDAD492DC9A75A00333262 /* SymbolPicker */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 77DDAD482DC9A75A00333262 /* XCRemoteSwiftPackageReference "SymbolPicker" */;
+			productName = SymbolPicker;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 775F8C222DC73D09001B0FFF /* Project object */;
 }

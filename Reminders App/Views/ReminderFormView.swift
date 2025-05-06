@@ -6,110 +6,99 @@
 //
 
 import SwiftUI
+import SymbolPicker
+
+
 
 struct ReminderFormView: View {
     @Environment(\.dismiss) var dismiss
+    @EnvironmentObject var manager: ReminderManager
     @State private var name = ""
     @State private var iconName = "star.fill"
     @State private var colour = Color.black
     var startDate = Date()
     @State private var goalDate = Date()
+    @State private var iconPickerPresented = false
+
     
     var body: some View {
-        VStack() {
-            HStack() {
-                Text("Create a new reminder")
-                    .font(.system(size: 24, weight: .bold, design: .default))
-                Spacer()
-                Button(action: {
-                    
-                }) {
-                    ZStack() {
-                        Circle()
-                            .fill(.white)
-                            .shadow(radius: 5)
-                        Image(systemName: "xmark")
-                            .resizable(resizingMode: .stretch)
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 15.0, height: 15.0)
-                            .foregroundStyle(.black)
+        NavigationStack {
+            
+            Form {
+                Section {
+                    HStack{
+                        Spacer()
+                        CircularProgressBar(originalDate: Date().addingTimeInterval(-120), goalDate: Date().addingTimeInterval(120), selectedIconName: iconName, colour: colour)
+                            .frame(width: 200, height: 200)
+                        Spacer()
                     }
                 }
-                .frame(height: 24.0)
-            }
-            
-            Color(.clear)
-                .frame(height: 16.0)
-            
-            
-            
-            CircularProgressBar(originalDate: Date().addingTimeInterval(-120), goalDate: Date().addingTimeInterval(120), selectedIconName: iconName, colour: colour)
-                .frame(width: 200, height: 200)
+                .listRowBackground(Color.clear)
+                TextField("Name", text: $name)
                 
-            
-            Color(.clear)
-                .frame(height: 8.0)
-                
-            HStack() {
-                Text("Name")
-                    .font(.system(size: 20, weight: .bold, design: .default))
-                Spacer()
-            }
-            
-            TextField("Type", text: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Value@*/.constant("")/*@END_MENU_TOKEN@*/)
-            
-            Color(.clear)
-                .frame(height: 8.0)
-            
-            HStack() {
-                Text("Icon")
-                    .font(.system(size: 20, weight: .bold, design: .default))
-                Spacer()
-            }
-            
-            TextField("Type", text: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Value@*/.constant("")/*@END_MENU_TOKEN@*/)
-            
-            Color(.clear)
-                .frame(height: 8.0)
-            
-            HStack() {
-                Text("Colour")
-                    .font(.system(size: 20, weight: .bold, design: .default))
-                Spacer()
-            }
-            
-            TextField("Type", text: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Value@*/.constant("")/*@END_MENU_TOKEN@*/)
-            
-            Color(.clear)
-                .frame(height: 8.0)
-            
-            HStack() {
-                Text("Date / Time")
-                    .font(.system(size: 20, weight: .bold, design: .default))
-                Spacer()
-            }
-            
-            TextField("Type", text: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Value@*/.constant("")/*@END_MENU_TOKEN@*/)
-            
-            Color(.clear)
-                .frame(height: 8.0)
-            
-            Button(action: {
-                
-            }) {
-                ZStack {
-                    RoundedRectangle(cornerRadius:15)
-                        .foregroundStyle(.orange)
-                    Text("Create")
-                        .foregroundStyle(.white)
-                    
+                DatePicker(
+                    "End Date",
+                    selection: $goalDate,
+                    in: Date()...,
+                    displayedComponents: [.date, .hourAndMinute]
+                )
+                HStack{
+                    Text("icon")
+                        .foregroundStyle(.black)
+                    Spacer()
+                    Button(action: {
+                        iconPickerPresented = true
+                    }) {
+                        ZStack {
+                            /*RoundedRectangle(cornerRadius: 8)
+                                .frame(width: 40.0, height: 40.0)
+                                .foregroundColor(Color(.systemBackground))*/
+                            Image(systemName: iconName)
+                                .foregroundStyle(iconPickerPresented ? .blue : .black)
+                        }
+                    }
+                    .buttonStyle(.bordered)
                 }
-                .frame(width: 160, height: 60)
+                .sheet(isPresented: $iconPickerPresented) {SymbolPicker(symbol: $iconName)}
+                
+                ColorPicker("Color", selection: $colour)
+                
+                Section {
+                    Button("Create reminder") {
+                        print("button clicked")
+                        if (
+                            name != "" &&
+                            iconName != "" &&
+                            goalDate > Date()
+                        ) {
+                            print("Create reminder")
+                            manager.addReminder(reminder: Reminder(
+                                    name: name,
+                                    iconName: iconName,
+                                    colour: convertToRGBColor(color: colour),
+                                    startDate: Date(),
+                                    goalDate: goalDate
+                                )
+                            )
+                            dismiss()
+                        }
+                    }
+                    .buttonStyle(.bordered)
+                    .foregroundStyle(.black)
+                }
+                .listRowBackground(Color.clear)
+
             }
-            Spacer()
+            .navigationTitle("Create a reminder")
+            .toolbar(content: {
+                ToolbarItem(placement: .cancellationAction, content: {
+                    Button("Close") {
+                        dismiss()
+                    }
+                })
+            })
+            
         }
-        .padding(.horizontal)
-        
     }
 }
 
@@ -131,4 +120,5 @@ func convertToRGBColor(color: Color) -> RGBColor {
 
 #Preview {
     ReminderFormView()
+        .environmentObject(ReminderManager())
 }

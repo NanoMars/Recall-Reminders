@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @StateObject var manager =  ReminderManager()
     @Environment(\.colorScheme) var colorScheme
+    @State private var isPresentingReminderForm = false
     
     var bottomArea: CGFloat = 80
     var reminderPadding: CGFloat = 15
@@ -44,6 +45,7 @@ struct ContentView: View {
                             selectedIconName: reminder.iconName,
                             colour: convertToColor(rgb: reminder.colour)
                         )
+                        .aspectRatio(contentMode: .fit)
                     }
                 }
             }
@@ -62,7 +64,7 @@ struct ContentView: View {
                     .shadow(radius: /*@START_MENU_TOKEN@*/10/*@END_MENU_TOKEN@*/)
                 HStack(alignment: .center) {
                     Button(action: {
-                        
+                        isPresentingReminderForm = true
                     }) {
                         ZStack{
                             RoundedRectangle(cornerRadius: 12)
@@ -76,6 +78,10 @@ struct ContentView: View {
                         }
 
                     }
+                    .sheet(isPresented: $isPresentingReminderForm, content: {
+                        ReminderFormView()
+                            .environmentObject(manager)
+                    })
                     
                     
                 }
