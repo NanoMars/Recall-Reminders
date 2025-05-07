@@ -20,4 +20,5 @@ struct Reminder: Identifiable, Codable {
     var colour: RGBColor
     var startDate: Date
     var goalDate: Date
+    var complete: Bool
 }

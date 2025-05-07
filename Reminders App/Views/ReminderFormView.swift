@@ -28,7 +28,15 @@ struct ReminderFormView: View {
                 Section {
                     HStack{
                         Spacer()
-                        CircularProgressBar(originalDate: Date().addingTimeInterval(-120), goalDate: Date().addingTimeInterval(120), selectedIconName: iconName, colour: colour)
+                        CircularProgressBar(
+                            id: UUID(),
+                            
+                            originalDate: Date().addingTimeInterval(-120),
+                            goalDate: Date().addingTimeInterval(120),
+                            selectedIconName: iconName,
+                            colour: colour,
+                            complete: false)
+                                
                             .frame(width: 200, height: 200)
                         Spacer()
                     }
@@ -77,7 +85,8 @@ struct ReminderFormView: View {
                                     iconName: iconName,
                                     colour: convertToRGBColor(color: colour),
                                     startDate: Date(),
-                                    goalDate: goalDate
+                                    goalDate: goalDate,
+                                    complete: false
                                 )
                             )
                             dismiss()

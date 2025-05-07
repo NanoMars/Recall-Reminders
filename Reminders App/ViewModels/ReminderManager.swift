@@ -40,6 +40,13 @@ class ReminderManager: ObservableObject {
             reminders = decoded
         }
     }
+    
+    func markComplete(id: UUID) {
+        if let index = reminders.firstIndex(where: {$0.id == id}) {
+            reminders[index].complete = true
+            saveReminders()
+        }
+    }
 }
 
 

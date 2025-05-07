@@ -39,18 +39,25 @@ struct ContentView: View {
                     .frame(height: topSafeArea)
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
                     ForEach(manager.reminders) { reminder in
+
+                                
                         CircularProgressBar(
+                            id: reminder.id,
                             originalDate: reminder.startDate,
                             goalDate: reminder.goalDate,
                             selectedIconName: reminder.iconName,
-                            colour: convertToColor(rgb: reminder.colour)
+                            colour: convertToColor(rgb: reminder.colour),
+                            complete: reminder.complete
                         )
-                        .aspectRatio(contentMode: .fit)
+                        .aspectRatio(1, contentMode: .fit)
+                    
                     }
                 }
+                .padding(.horizontal, 16)
             }
             
-            .padding([.top, .leading, .trailing], reminderPadding)
+            
+            .padding([.top], reminderPadding)
             .padding(.bottom, bottomArea + bottomSafeArea)
             .ignoresSafeArea(edges: .top)
             
