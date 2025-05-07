@@ -19,7 +19,7 @@ import SwiftUI
 struct ReminderListFormView: View {
     var body: some View {
         
-        
+        // add somw form here later that creates a new filtered view
     }
 
 }

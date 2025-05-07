@@ -9,7 +9,6 @@ import SwiftUI
 import SymbolPicker
 
 
-
 struct ReminderFormView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var manager: ReminderManager

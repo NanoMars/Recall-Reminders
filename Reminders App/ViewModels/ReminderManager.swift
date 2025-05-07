@@ -45,6 +45,7 @@ class ReminderManager: ObservableObject {
         if let index = reminders.firstIndex(where: {$0.id == id}) {
             reminders[index].complete = true
             saveReminders()
+            print("reminder completed: ")
         }
     }
 }

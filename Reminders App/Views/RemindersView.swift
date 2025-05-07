@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct FilteredView: View {
+struct RemindersView: View {
     @StateObject var manager =  ReminderManager()
     @Environment(\.colorScheme) var colorScheme
     @State private var isPresentingReminderForm = false

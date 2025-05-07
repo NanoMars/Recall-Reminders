@@ -87,7 +87,6 @@ struct CircularProgressBar: View {
                 
                 if isPressed {
                     completionProgress = min(1, max(0, completionProgress + 0.01))
-                    print("hi")
                 } else {
                     completionProgress = min(1, max(0, completionProgress - 0.01))
                 }
@@ -122,10 +121,10 @@ func calculateDateProgress(currentDate: Date, goalDate: Date, originalDate: Date
         CircularProgressBar(
             id: UUID(),
             originalDate: Date().addingTimeInterval(0),
-            goalDate: Date().addingTimeInterval(0),
+            goalDate: Date().addingTimeInterval(30),
             selectedIconName: "tshirt.fill",
             colour: Color.blue,
-            complete: true
+            complete: false
         )
     }
     .frame(width: 200, height: 200, alignment: .center)
