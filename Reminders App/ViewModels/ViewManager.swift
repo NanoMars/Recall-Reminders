@@ -19,7 +19,9 @@ class ViewManager: ObservableObject {
         addView(view: FilteredView(
             name: "coolname",
             sortBy: "something",
+            sortAscending: false,
             filters: ["something else"]
+            
         ))
     }
     

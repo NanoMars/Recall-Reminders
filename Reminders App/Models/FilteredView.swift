@@ -11,6 +11,7 @@ struct FilteredView: Identifiable, Codable {
     var id = UUID()
     var name: String
     var sortBy: String
+    var sortAscending: Bool
     var filters: [String]
 }
 

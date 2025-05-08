@@ -18,23 +18,8 @@ struct CircularProgressBar: View {
     var goalDate: Date
     var selectedIconName: String
     var colour: Color
-    @State private var complete: Bool
+    @State private var complete: Bool = false
     
-    init(
-     id: UUID,
-     originalDate: Date,
-     goalDate: Date,
-     selectedIconName: String,
-     colour: Color,
-     complete initialComplete: Bool
-    ) {
-        self.id = id
-        self.originalDate = Date()
-        self.goalDate = goalDate
-        self.selectedIconName = selectedIconName
-        self.colour = colour
-        _complete = State(initialValue: initialComplete)
-    }
     
     var progress: Double {
         calculateDateProgress(currentDate: currentDate, goalDate: goalDate, originalDate: originalDate)
@@ -106,6 +91,17 @@ struct CircularProgressBar: View {
                     complete = true
                 }
             })
+            .onReceive(manager.$reminders) { reminders in
+                if let updatedReminder = reminders.first(where: { $0.id == id }) {
+                    complete = updatedReminder.complete
+                }
+                
+            }
+        }
+        .onAppear {
+            if let updatedReminder = manager.reminders.first(where: { $0.id == id}) {
+                complete = updatedReminder.complete
+            }
         }
     }
 }
@@ -124,7 +120,6 @@ func calculateDateProgress(currentDate: Date, goalDate: Date, originalDate: Date
             goalDate: Date().addingTimeInterval(30),
             selectedIconName: "tshirt.fill",
             colour: Color.blue,
-            complete: false
         )
     }
     .frame(width: 200, height: 200, alignment: .center)

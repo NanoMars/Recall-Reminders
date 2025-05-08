@@ -46,7 +46,7 @@ struct ReminderFormView: View {
                 DatePicker(
                     "End Date",
                     selection: $goalDate,
-                    in: Date()...,
+                    in: Date().addingTimeInterval(60)...,
                     displayedComponents: [.date, .hourAndMinute]
                 )
                 HStack{
@@ -79,11 +79,12 @@ struct ReminderFormView: View {
                             goalDate > Date()
                         ) {
                             print("Create reminder")
+                            let creationDate = Date()
                             manager.addReminder(reminder: Reminder(
                                     name: name,
                                     iconName: iconName,
                                     colour: convertToRGBColor(color: colour),
-                                    startDate: Date(),
+                                    startDate: creationDate,
                                     goalDate: goalDate,
                                     complete: false
                                 )

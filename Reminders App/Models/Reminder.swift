@@ -7,18 +7,28 @@
 
 import Foundation
 
-struct RGBColor: Codable {
+struct RGBColor: Codable, Equatable {
     var r: Double
     var g: Double
     var b: Double
 }
 
-struct Reminder: Identifiable, Codable {
-    var id = UUID()
-    var name: String
-    var iconName: String
-    var colour: RGBColor
-    var startDate: Date
-    var goalDate: Date
-    var complete: Bool
+
+final class Reminder: ObservableObject, Identifiable {
+    let id = UUID()
+    @Published var name: String
+    @Published var iconName: String
+    @Published var colour: RGBColor
+    @Published var startDate: Date
+    @Published var goalDate: Date
+    @Published var complete: Bool
+    
+    init(name: String, iconName: String, colour: RGBColor, startDate: Date, goalDate: Date, complete: Bool) {
+        self.name = name
+        self.iconName = iconName
+        self.colour = colour
+        self.startDate = startDate
+        self.goalDate = goalDate
+        self.complete = complete
+    }
 }
