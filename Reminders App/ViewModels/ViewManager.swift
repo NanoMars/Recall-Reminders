@@ -16,13 +16,6 @@ class ViewManager: ObservableObject {
     
     init() {
         loadViews()
-        addView(view: FilteredView(
-            name: "coolname",
-            sortBy: "something",
-            sortAscending: false,
-            filters: ["something else"]
-            
-        ))
     }
     
     func addView(view: FilteredView) {

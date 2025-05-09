@@ -18,9 +18,9 @@ struct RemindersView: View {
     var filters: [String]
     
     
+    
     var  reminderList: [Reminder] {
-        
-        
+
         let sorted: [Reminder]
         
         switch sortBy {
@@ -31,8 +31,15 @@ struct RemindersView: View {
         default:
             sorted = manager.reminders
         }
-        
         return sortAscending ? sorted : sorted.reversed()
+    }
+    
+    var filteredReminders: [Reminder] {
+        reminderList.filter{ reminder in
+            
+            print(filters.contains("completed") && reminder.complete)
+            return !(filters.contains("completed") && reminder.complete)
+        }
     }
     
     var bottomArea: CGFloat = 80
@@ -55,24 +62,21 @@ struct RemindersView: View {
     }
     
     var body: some View {
-        
         ZStack(alignment: .bottom) {
             ScrollView {
                 // add a spacer here at topsafearea size
                 Color.clear
                     .frame(height: topSafeArea)
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
-                    ForEach(reminderList) { reminder in
-                        if (filters.contains(where: {$0 == "completed"}) && reminder.complete != true) || !filters.contains(where: {$0 == "completed"}) {
-                            CircularProgressBar(
-                                id: reminder.id,
-                                originalDate: reminder.startDate,
-                                goalDate: reminder.goalDate,
-                                selectedIconName: reminder.iconName,
-                                colour: convertToColor(rgb: reminder.colour),
-                            )
-                            .aspectRatio(1, contentMode: .fit)
-                        }
+                    ForEach(filteredReminders) { reminder in
+                        CircularProgressBar(
+                            id: reminder.id,
+                            originalDate: reminder.startDate,
+                            goalDate: reminder.goalDate,
+                            selectedIconName: reminder.iconName,
+                            colour: convertToColor(rgb: reminder.colour),
+                        )
+                        .aspectRatio(1, contentMode: .fit)
                     }
                     .padding(.horizontal, 16)
                 }
@@ -120,6 +124,9 @@ struct RemindersView: View {
                 }
             }
             .ignoresSafeArea(edges: .bottom)
+        }
+        .onAppear {
+            print(filters)
         }
         .navigationTitle(title)
         .onChange(of: manager.reminders) {

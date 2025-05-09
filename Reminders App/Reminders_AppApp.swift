@@ -13,6 +13,8 @@ struct Reminders_AppApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(ViewManager())
+                .environmentObject(ReminderManager())
         }
     }
 }
