@@ -23,7 +23,7 @@ struct ReminderFormView: View {
     var body: some View {
         NavigationStack {
             
-            Form {
+            Form(content: {
                 Section {
                     HStack{
                         Spacer()
@@ -33,8 +33,7 @@ struct ReminderFormView: View {
                             originalDate: Date().addingTimeInterval(-120),
                             goalDate: Date().addingTimeInterval(120),
                             selectedIconName: iconName,
-                            colour: colour,
-                            complete: false)
+                            colour: colour)
                                 
                             .frame(width: 200, height: 200)
                         Spacer()
@@ -80,15 +79,17 @@ struct ReminderFormView: View {
                         ) {
                             print("Create reminder")
                             let creationDate = Date()
-                            manager.addReminder(reminder: Reminder(
-                                    name: name,
-                                    iconName: iconName,
-                                    colour: convertToRGBColor(color: colour),
-                                    startDate: creationDate,
-                                    goalDate: goalDate,
-                                    complete: false
-                                )
+                            
+                            let newReminder = Reminder(
+                                name: name,
+                                iconName: iconName,
+                                colour: convertToRGBColor(color: colour),
+                                startDate: creationDate,
+                                goalDate: goalDate,
+                                complete: false
                             )
+                            
+                            manager.addReminder(reminder: newReminder)
                             dismiss()
                         }
                     }
@@ -97,7 +98,7 @@ struct ReminderFormView: View {
                 }
                 .listRowBackground(Color.clear)
 
-            }
+            })
             .navigationTitle("Create a reminder")
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction, content: {

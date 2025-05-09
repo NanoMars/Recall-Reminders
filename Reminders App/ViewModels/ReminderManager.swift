@@ -43,12 +43,12 @@ class ReminderManager: ObservableObject {
     
     func markComplete(id: UUID) {
         if let index = reminders.firstIndex(where: {$0.id == id}) {
-            var updatedReminder = reminders[index]
             reminders[index].complete = true
             reminders = reminders
             saveReminders()
-
-            print("reminder completed: " + updatedReminder.name)
+            loadReminders()
+            let completedReminder = reminders[index]
+            print("reminder completed: " + completedReminder.name)
         }
     }
 }
