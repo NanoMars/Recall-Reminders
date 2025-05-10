@@ -15,12 +15,16 @@ struct ReminderFormView: View {
     @State private var name = ""
     @State private var iconName = "star.fill"
     @State private var colour = Color.black
-    var startDate = Date()
+    @State private var startDate = Date()
     @State private var goalDate = Date()
     @State private var iconPickerPresented = false
+    var editMode = false
+    var id = UUID()
 
     
     var body: some View {
+        
+        
         NavigationStack {
             
             Form(content: {
@@ -28,12 +32,15 @@ struct ReminderFormView: View {
                     HStack{
                         Spacer()
                         CircularProgressBar(
+                            manager: manager,
                             id: UUID(),
                             
                             originalDate: Date().addingTimeInterval(-120),
                             goalDate: Date().addingTimeInterval(120),
                             selectedIconName: iconName,
-                            colour: colour)
+                            colour: colour,
+                            preview: true
+                        )
                                 
                             .frame(width: 200, height: 200)
                         Spacer()
@@ -70,46 +77,84 @@ struct ReminderFormView: View {
                 ColorPicker("Color", selection: $colour)
                 
                 Section {
-                    Button("Create reminder") {
-                        print("button clicked")
-                        if (
-                            name != "" &&
-                            iconName != "" &&
-                            goalDate > Date()
-                        ) {
-                            print("Create reminder")
-                            let creationDate = Date()
-                            
-                            let newReminder = Reminder(
-                                name: name,
-                                iconName: iconName,
-                                colour: convertToRGBColor(color: colour),
-                                startDate: creationDate,
-                                goalDate: goalDate,
-                                complete: false
-                            )
-                            
-                            manager.addReminder(reminder: newReminder)
-                            dismiss()
+                    HStack {
+                        Button(editMode ? "Apply Edit" : "Create reminder") {
+                            print("button clicked")
+                            if (
+                                name != "" &&
+                                iconName != "" &&
+                                goalDate > Date()
+                            ) {
+                                print("Create reminder")
+                                let creationDate = Date()
+                                
+                                let newReminder = Reminder(
+                                    name: name,
+                                    iconName: iconName,
+                                    colour: convertToRGBColor(color: colour),
+                                    startDate: creationDate,
+                                    goalDate: goalDate,
+                                    complete: false
+                                )
+                                
+                                if !editMode {
+                                    manager.addReminder(reminder: newReminder)
+                                } else {
+                                    manager.editReminder(id: id, newReminder: newReminder)
+                                }
+                                dismiss()
+                            }
+                        }
+                        .buttonStyle(.bordered)
+                        .foregroundStyle(.black)
+                        
+                        if editMode {
+                            Button("Delete Reminder") {
+                                manager.removeReminder(id: id)
+                                dismiss()
+                            }
+                            .buttonStyle(.bordered)
+                            .foregroundStyle(.red)
                         }
                     }
-                    .buttonStyle(.bordered)
-                    .foregroundStyle(.black)
                 }
                 .listRowBackground(Color.clear)
 
             })
-            .navigationTitle("Create a reminder")
-            .toolbar(content: {
-                ToolbarItem(placement: .cancellationAction, content: {
+            .navigationTitle(editMode ? "Edit Reminder" : "Create a reminder")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing, content: {
                     Button("Close") {
                         dismiss()
                     }
                 })
-            })
-            
+            }
+        }
+        
+        .onAppear {
+            if editMode {
+                let tempReminder = returnReminder(id: id, manager: manager)
+                name = tempReminder?.name ?? "Unknown"
+                iconName = tempReminder?.iconName ?? "questionmark.diamond"
+                if let tempColour = tempReminder?.colour {
+                    colour = Color(
+                        red: tempColour.r / 255,
+                        green: tempColour.g / 255,
+                        blue: tempColour.b / 255
+                    )
+                } else {
+                    colour = .blue
+                }
+                startDate = tempReminder?.startDate ?? Date().addingTimeInterval(-3600)
+                goalDate = tempReminder?.goalDate ?? Date().addingTimeInterval(3600)
+                
+            }
         }
     }
+}
+
+func returnReminder(id: UUID, manager: ReminderManager) -> Reminder? {
+    return manager.reminders.first(where: { $0.id == id })
 }
 
 func convertToRGBColor(color: Color) -> RGBColor {
@@ -129,6 +174,6 @@ func convertToRGBColor(color: Color) -> RGBColor {
 }
 
 #Preview {
-    ReminderFormView()
+    ReminderFormView(editMode: true)
         .environmentObject(ReminderManager())
 }

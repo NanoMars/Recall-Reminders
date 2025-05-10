@@ -9,9 +9,10 @@ import SwiftUI
  
 
 struct CircularProgressBar: View {
-    @StateObject var manager =  ReminderManager()
+    @StateObject var manager: ReminderManager
     @Environment(\.colorScheme) var colorScheme
     @State private var currentDate = Date()
+    @State private var isPresentingReminderForm = false
     
     var id: UUID
     var originalDate: Date
@@ -19,6 +20,8 @@ struct CircularProgressBar: View {
     var selectedIconName: String
     var colour: Color
     @State private var complete: Bool = false
+    var preview: Bool = false
+
     
     
     var progress: Double {
@@ -85,8 +88,17 @@ struct CircularProgressBar: View {
                         isPressed = false
                     })
             )
+            .onTapGesture(perform: {
+                if completionProgress < 0.2 && !preview {
+                    isPresentingReminderForm = true
+                }
+            })
+            .sheet(isPresented: $isPresentingReminderForm, content: {
+                ReminderFormView(editMode: true, id: id)
+                    .environmentObject(manager)
+            })
             .onChange(of: completionProgress, {
-                if completionProgress >= 1 {
+                if completionProgress >= 1 && !preview{
                     manager.markComplete(id: id)
                     complete = true
                 }
@@ -115,11 +127,13 @@ func calculateDateProgress(currentDate: Date, goalDate: Date, originalDate: Date
 #Preview {
     ZStack{
         CircularProgressBar(
+            manager: ReminderManager(),
             id: UUID(),
             originalDate: Date().addingTimeInterval(0),
             goalDate: Date().addingTimeInterval(30),
             selectedIconName: "tshirt.fill",
             colour: Color.blue,
+            preview: true
         )
     }
     .frame(width: 200, height: 200, alignment: .center)

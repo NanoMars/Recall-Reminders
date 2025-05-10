@@ -14,20 +14,11 @@ class ReminderManager: ObservableObject {
     @Environment(\.colorScheme) var colorScheme
     
     private var cancellables = Set<AnyCancellable>()
-    private var reminderSubscriptions = Set<AnyCancellable>()
     
     let saveKey = "reminders"
     
     init() {
         loadReminders()
-        
-        $reminders
-            .sink() { [weak self] list in
-                self?.subscribeToReminderChanges(list)
-            }
-            .store(in: &cancellables)
-        
-        subscribeToReminderChanges(reminders)
     }
     
     func addReminder(reminder: Reminder) {
@@ -58,25 +49,15 @@ class ReminderManager: ObservableObject {
             reminders[index].complete = true
             reminders = reminders
             saveReminders()
-            let completedReminder = reminders[index]
-            print("reminder completed: " + completedReminder.name)
         }
     }
-    
-    private func subscribeToReminderChanges(_ list: [Reminder]) {
-        
-        reminderSubscriptions.forEach {$0.cancel()}
-        reminderSubscriptions.removeAll()
-        
-        for reminder in list {
-            reminder.objectWillChange
-                .sink { [weak self] in
-                    self?.objectWillChange.send()
-                }
-                .store(in: &reminderSubscriptions)
+    func editReminder(id: UUID, newReminder: Reminder) {
+        if let index = reminders.firstIndex(where: {$0.id == id}) {
+            reminders[index] = newReminder
+            reminders = reminders
+            saveReminders()
         }
     }
-    
 }
 
 

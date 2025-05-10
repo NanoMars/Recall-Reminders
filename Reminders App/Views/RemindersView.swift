@@ -11,6 +11,7 @@ struct RemindersView: View {
     @EnvironmentObject var manager: ReminderManager
     @Environment(\.colorScheme) var colorScheme
     @State private var isPresentingReminderForm = false
+    @State private var updateTrigger = false
 
     var title: String
     var sortBy: String
@@ -31,6 +32,7 @@ struct RemindersView: View {
         default:
             sorted = manager.reminders
         }
+        let _ = updateTrigger
         return sortAscending ? sorted : sorted.reversed()
     }
     
@@ -70,6 +72,7 @@ struct RemindersView: View {
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
                     ForEach(filteredReminders) { reminder in
                         CircularProgressBar(
+                            manager: manager,
                             id: reminder.id,
                             originalDate: reminder.startDate,
                             goalDate: reminder.goalDate,
@@ -129,11 +132,7 @@ struct RemindersView: View {
             print(filters)
         }
         .navigationTitle(title)
-        .onChange(of: manager.reminders) {
-            print("manager.reminders updated")
-        }
     }
-        
 }
 
 func convertToColor(rgb: RGBColor) -> Color {

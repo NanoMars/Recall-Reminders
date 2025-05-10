@@ -23,6 +23,7 @@ struct ReminderListFormView: View {
     @State private var sortAscending: Bool = false
     @State private var showCompleted: Bool = true
     @State private var name: String = ""
+    
     var body: some View {
         NavigationStack{
             Form {

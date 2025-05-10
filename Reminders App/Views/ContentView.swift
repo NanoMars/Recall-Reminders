@@ -9,11 +9,12 @@ import SwiftUI
 
 
 struct ContentView: View {
-    @EnvironmentObject var manager: ViewManager
+    @EnvironmentObject var viewManager: ViewManager
+    @EnvironmentObject var reminderManager: ReminderManager
     @State private var isPresentingCreationForm = false
     
     var body: some View {
-        let viewList: [FilteredView] = manager.views
+        let viewList: [FilteredView] = viewManager.views
         NavigationStack {
             VStack {
                 HStack {
@@ -26,7 +27,8 @@ struct ContentView: View {
                 }
                 .sheet(isPresented: $isPresentingCreationForm, content: {
                     ReminderListFormView()
-                        .environmentObject(manager)
+                        .environmentObject(viewManager)
+                        .environmentObject(reminderManager)
                 })
                 ScrollView {
                     VStack {
@@ -36,7 +38,6 @@ struct ContentView: View {
                             )) {
                                 Text(view.name)
                             }
-                            .environmentObject(ReminderManager())
                         }
                     }
                 }
