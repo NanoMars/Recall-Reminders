@@ -40,6 +40,13 @@ class ViewManager: ObservableObject {
             views = decoded
         }
     }
+    func editView(id: UUID, newView: FilteredView) {
+        if let index = views.firstIndex(where: {$0.id == id}) {
+            views[index] = newView
+            views = views
+            saveViews()
+        }
+    }
 }
 
 

@@ -24,6 +24,9 @@ struct ReminderListFormView: View {
     @State private var showCompleted: Bool = true
     @State private var name: String = ""
     
+    var editMode = false
+    var id = UUID()
+    
     var body: some View {
         NavigationStack{
             Form {
@@ -46,14 +49,23 @@ struct ReminderListFormView: View {
                     Toggle("Show Completed", isOn: $showCompleted)
                 }
                 Section {
-                    Button("Create View") {
+                    Button(editMode ? "Apply Edits" : "Create View") {
                         if name != "" {
-                            manager.addView(view: FilteredView(
-                                name: name,
-                                sortBy: selectedSort,
-                                sortAscending: sortAscending,
-                                filters: showCompleted ? [] : ["completed"]
-                            ))
+                            if editMode {
+                                manager.editView(id: id, newView: FilteredView(
+                                    name: name,
+                                    sortBy: selectedSort,
+                                    sortAscending: sortAscending,
+                                    filters: showCompleted ? [] : ["completed"]
+                                ))
+                            } else {
+                                manager.addView(view: FilteredView(
+                                    name: name,
+                                    sortBy: selectedSort,
+                                    sortAscending: sortAscending,
+                                    filters: showCompleted ? [] : ["completed"]
+                                ))
+                            }
                             dismiss()
                         }
                     }
@@ -62,7 +74,7 @@ struct ReminderListFormView: View {
                 }
                 .listRowBackground(Color.clear)
             }
-            .navigationTitle("Create a view")
+            .navigationTitle(editMode ? "Edit View" : "Create a View")
             .toolbar(content: {
                 ToolbarItem(placement: .cancellationAction, content: {
                     Button("Close") {
@@ -71,13 +83,24 @@ struct ReminderListFormView: View {
                 })
             })
         }
-        
+        .onAppear {
+            if editMode {
+                let tempView = returnView(id: id, manager: manager)
+                selectedSort = tempView?.sortBy ?? "goalDate"
+                sortAscending = tempView?.sortAscending ?? false
+                showCompleted = tempView?.filters.contains("completed") ?? true
+                name = tempView?.name ?? "Unknown"
+                
+            }
+        }
     }
 }
 
-
+func returnView(id: UUID, manager: ViewManager) -> FilteredView? {
+    return manager.views.first(where: { $0.id == id })
+}
 
 #Preview {
-    ReminderListFormView()
+    ReminderListFormView(editMode: true)
         .environmentObject(ViewManager())
 }
