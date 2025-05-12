@@ -12,6 +12,20 @@ import Combine
 class ReminderManager: ObservableObject {
     @Published var reminders: [Reminder] = []
     @Environment(\.colorScheme) var colorScheme
+    var tagCounts: [String: Int] {
+        var counts: [String: Int] = [:]
+        for reminder in reminders {
+            for tag in reminder.tags {
+                counts[tag, default: 0] += 1
+            }
+        }
+        return Dictionary(uniqueKeysWithValues: counts.sorted {
+            if $0.value == $1.value {
+                return $0.key < $1.key
+            }
+            return $0.value > $1.value
+        })
+    }
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -23,6 +37,7 @@ class ReminderManager: ObservableObject {
     
     func addReminder(reminder: Reminder) {
         reminders.append(reminder)
+        
         saveReminders()
     }
     

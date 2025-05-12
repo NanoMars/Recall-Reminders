@@ -22,9 +22,10 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
     @Published var startDate: Date
     @Published var goalDate: Date
     @Published var complete: Bool
+    @Published var tags: [String]
     
     enum CodingKeys: String, CodingKey {
-        case id, name, iconName, colour, startDate, goalDate, complete
+        case id, name, iconName, colour, startDate, goalDate, complete, tags
     }
     
     
@@ -38,6 +39,7 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
         try container.encode(startDate, forKey: .startDate)
         try container.encode(goalDate, forKey: .goalDate)
         try container.encode(complete, forKey: .complete)
+        try container.encode(tags, forKey: .tags)
     }
     
     required init(from decoder: Decoder) throws {
@@ -50,6 +52,7 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
         startDate = try container.decode(Date.self, forKey: .startDate)
         goalDate = try container.decode(Date.self, forKey: .goalDate)
         complete = try container.decode(Bool.self, forKey: .complete)
+        tags = try container.decode([String].self, forKey: .tags)
     }
     
     static func == (lhs: Reminder, rhs: Reminder ) -> Bool {
@@ -59,7 +62,8 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
         lhs.colour == rhs.colour &&
         lhs.startDate == rhs.startDate &&
         lhs.goalDate == rhs.goalDate &&
-        lhs.complete == rhs.complete
+        lhs.complete == rhs.complete &&
+        lhs.tags == rhs.tags
     }
     
     init(
@@ -68,7 +72,8 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
         colour: RGBColor,
         startDate: Date,
         goalDate: Date,
-        complete: Bool
+        complete: Bool,
+        tags: [String] = []
     ) {
         self.id = UUID()
         self.name = name
@@ -77,5 +82,6 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
         self.startDate = startDate
         self.goalDate = goalDate
         self.complete = complete
+        self.tags = tags
     }
 }
