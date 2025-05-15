@@ -18,11 +18,25 @@ import SwiftUI
 
 struct ReminderListFormView: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var manager: ViewManager
+    @EnvironmentObject var viewManager: ViewManager
+    @EnvironmentObject var reminderManager: ReminderManager
     @State private var selectedSort: String = "goalDate"
     @State private var sortAscending: Bool = false
     @State private var showCompleted: Bool = true
     @State private var name: String = ""
+    @State var filters: [String] = []
+    
+    @State private var tagPickerPresented: Bool = false
+    @State private var filtersExclusive: Bool = true
+    
+    var multiPickerOptions: [String] {
+        let counts = reminderManager.tagCounts
+        var returning: [String] = []
+        for count in counts {
+            returning.append(count.key)
+        }
+        return returning
+    }
     
     var editMode = false
     var id = UUID()
@@ -47,24 +61,36 @@ struct ReminderListFormView: View {
                 }
                 Section(header: Text("Filters")) {
                     Toggle("Show Completed", isOn: $showCompleted)
+                    
+                    Button("Pick tags") {
+                        tagPickerPresented = true
+                    }
+                    .sheet(isPresented: $tagPickerPresented, content: {
+                        MultiPickerScreen( pickedTags: $filters, editMode: false)
+                            .environmentObject(reminderManager)
+                    })
+                    
+                    Picker("Exclusive or Inclusive ", selection: $filtersExclusive) {
+                        Text("Exclusive").tag(true)
+                        Text("Inclusive").tag(false)
+                    }
+                    .pickerStyle(.segmented)
                 }
                 Section {
                     Button(editMode ? "Apply Edits" : "Create View") {
                         if name != "" {
+                            let newView = FilteredView (
+                                name: name,
+                                sortBy: selectedSort,
+                                sortAscending: sortAscending,
+                                filtersExclusive: filtersExclusive,
+                                filters: showCompleted ? filters : (filters + ["completed"]),
+                            )
+                            print(filtersExclusive, sortAscending)
                             if editMode {
-                                manager.editView(id: id, newView: FilteredView(
-                                    name: name,
-                                    sortBy: selectedSort,
-                                    sortAscending: sortAscending,
-                                    filters: showCompleted ? [] : ["completed"]
-                                ))
+                                viewManager.editView(id: id, newView: newView)
                             } else {
-                                manager.addView(view: FilteredView(
-                                    name: name,
-                                    sortBy: selectedSort,
-                                    sortAscending: sortAscending,
-                                    filters: showCompleted ? [] : ["completed"]
-                                ))
+                                viewManager.addView(view: newView)
                             }
                             dismiss()
                         }
@@ -85,12 +111,13 @@ struct ReminderListFormView: View {
         }
         .onAppear {
             if editMode {
-                let tempView = returnView(id: id, manager: manager)
+                let tempView = returnView(id: id, manager: viewManager)
                 selectedSort = tempView?.sortBy ?? "goalDate"
                 sortAscending = tempView?.sortAscending ?? false
                 showCompleted = tempView?.filters.contains("completed") ?? true
                 name = tempView?.name ?? "Unknown"
-                
+                filtersExclusive = tempView?.filtersExclusive ?? false
+                filters = tempView?.filters ?? []
             }
         }
     }
@@ -101,6 +128,6 @@ func returnView(id: UUID, manager: ViewManager) -> FilteredView? {
 }
 
 #Preview {
-    ReminderListFormView(editMode: true)
+    ReminderListFormView(editMode: false)
         .environmentObject(ViewManager())
 }

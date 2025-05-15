@@ -12,6 +12,7 @@ struct FilteredView: Identifiable, Codable {
     var name: String
     var sortBy: String
     var sortAscending: Bool
+    var filtersExclusive: Bool
     var filters: [String]
 }
 

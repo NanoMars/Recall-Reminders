@@ -17,6 +17,7 @@ struct RemindersView: View {
     var sortBy: String
     var sortAscending: Bool
     var filters: [String]
+    var filtersExclusive: Bool
     
     
     
@@ -39,10 +40,14 @@ struct RemindersView: View {
     var filteredReminders: [Reminder] {
         reminderList.filter{ reminder in
             
-            print(filters.contains("completed") && reminder.complete)
-            return !(filters.contains("completed") && reminder.complete)
+            if filtersExclusive {
+                return reminder.tags.allSatisfy{ !filters.contains($0) }
+            } else {
+                return reminder.tags.contains{ filters.contains($0)}
+            }
         }
     }
+    
     
     var bottomArea: CGFloat = 80
     var reminderPadding: CGFloat = 15
