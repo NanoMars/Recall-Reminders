@@ -21,6 +21,7 @@ struct ReminderFormView: View {
     @State private var goalDate = Date()
     @State private var iconPickerPresented = false
     @State private var tags: [String] = []
+    @State private var notificationTimes: [Date] = []
     
     @State private var minimumGoalDate = Date()
     
@@ -321,6 +322,7 @@ struct ReminderFormView: View {
                 startDate = tempReminder?.startDate ?? Date().addingTimeInterval(-3600)
                 goalDate = tempReminder?.goalDate ?? Date().addingTimeInterval(3600)
                 tags = tempReminder?.tags ?? []
+                notificationTimes = tempReminder?.notificationTimes ?? []
                 
             }
         }
