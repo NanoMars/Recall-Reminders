@@ -23,7 +23,7 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
     @Published var goalDate: Date
     @Published var complete: Bool
     @Published var tags: [String]
-    @Published var notificationTimes: [date]
+    @Published var notificationTimes: [TimeInterval]
     
     enum CodingKeys: String, CodingKey {
         case id, name, iconName, colour, startDate, goalDate, complete, tags, notificationTimes
@@ -55,7 +55,7 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
         goalDate = try container.decode(Date.self, forKey: .goalDate)
         complete = try container.decode(Bool.self, forKey: .complete)
         tags = try container.decode([String].self, forKey: .tags)
-        notificationTimes = try container.decode([Date].self, forKey: .notificationTimes)
+        notificationTimes = try container.decode([TimeInterval].self, forKey: .notificationTimes)
     }
     
     static func == (lhs: Reminder, rhs: Reminder ) -> Bool {
@@ -66,7 +66,7 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
         lhs.startDate == rhs.startDate &&
         lhs.goalDate == rhs.goalDate &&
         lhs.complete == rhs.complete &&
-        lhs.tags == rhs.tags
+        lhs.tags == rhs.tags &&
         lhs.notificationTimes == rhs.notificationTimes
     }
     
@@ -78,7 +78,7 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
         goalDate: Date,
         complete: Bool,
         tags: [String] = [],
-        notificationTimes: [Date] = []
+        notificationTimes: [TimeInterval] = []
     ) {
         self.id = UUID()
         self.name = name

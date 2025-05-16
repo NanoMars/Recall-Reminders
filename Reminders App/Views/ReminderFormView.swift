@@ -21,7 +21,7 @@ struct ReminderFormView: View {
     @State private var goalDate = Date()
     @State private var iconPickerPresented = false
     @State private var tags: [String] = []
-    @State private var notificationTimes: [Date] = []
+    @State private var notificationTimes: [TimeInterval] = [0]
     
     @State private var minimumGoalDate = Date()
     
@@ -103,6 +103,24 @@ struct ReminderFormView: View {
             ColorPicker("Color", selection: $colour)
         }
         
+    }
+    
+    private var notificationSection: some View {
+        Section {
+            ForEach(0..<notificationTimes.count, id: \.self) { index in
+                
+                let minutesBefore = Int(notificationTimes[index] / 60)
+                Text(
+                    minutesBefore == 0
+                    ? "At end time"
+                    : "Notify \(minutesBefore) minute\(minutesBefore == 1 ? "" :"s") before")
+                    .swipeActions(content: {
+                        Button("Delete") {
+                            notificationTimes.remove(at: index)
+                        }
+                    })
+            }
+        }
     }
     
     private var footerSection: some View {
@@ -288,6 +306,7 @@ struct ReminderFormView: View {
                     progressSection
                     basicFieldSection
                     multiPickerSection
+                    notificationSection
                     footerSection
                 }
                 .coordinateSpace(name: "formScroll")
@@ -322,7 +341,7 @@ struct ReminderFormView: View {
                 startDate = tempReminder?.startDate ?? Date().addingTimeInterval(-3600)
                 goalDate = tempReminder?.goalDate ?? Date().addingTimeInterval(3600)
                 tags = tempReminder?.tags ?? []
-                notificationTimes = tempReminder?.notificationTimes ?? []
+                notificationTimes = tempReminder?.notificationTimes ?? [0]
                 
             }
         }
@@ -350,6 +369,6 @@ func convertToRGBColor(color: Color) -> RGBColor {
 }
 
 #Preview {
-    ReminderFormView(editMode: true)
+    ReminderFormView(editMode: false)
         .environmentObject(ReminderManager())
 }
