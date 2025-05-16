@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		77BAEF0C2DD6F9350084053D /* Toasts in Frameworks */ = {isa = PBXBuildFile; productRef = 77BAEF0B2DD6F9350084053D /* Toasts */; };
 		77DDAD4A2DC9A75A00333262 /* SymbolPicker in Frameworks */ = {isa = PBXBuildFile; productRef = 77DDAD492DC9A75A00333262 /* SymbolPicker */; };
 /* End PBXBuildFile section */
 
@@ -27,6 +28,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				77BAEF0C2DD6F9350084053D /* Toasts in Frameworks */,
 				77DDAD4A2DC9A75A00333262 /* SymbolPicker in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -71,6 +73,7 @@
 			name = "Reminders App";
 			packageProductDependencies = (
 				77DDAD492DC9A75A00333262 /* SymbolPicker */,
+				77BAEF0B2DD6F9350084053D /* Toasts */,
 			);
 			productName = "Reminders App";
 			productReference = 775F8C2A2DC73D09001B0FFF /* Reminders App.app */;
@@ -102,6 +105,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				77DDAD482DC9A75A00333262 /* XCRemoteSwiftPackageReference "SymbolPicker" */,
+				77BAEF0A2DD6F9350084053D /* XCRemoteSwiftPackageReference "swiftui-toasts" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 775F8C2B2DC73D09001B0FFF /* Products */;
@@ -335,6 +339,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		77BAEF0A2DD6F9350084053D /* XCRemoteSwiftPackageReference "swiftui-toasts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sunghyun-k/swiftui-toasts";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.1;
+			};
+		};
 		77DDAD482DC9A75A00333262 /* XCRemoteSwiftPackageReference "SymbolPicker" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/xnth97/SymbolPicker";
@@ -346,6 +358,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		77BAEF0B2DD6F9350084053D /* Toasts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 77BAEF0A2DD6F9350084053D /* XCRemoteSwiftPackageReference "swiftui-toasts" */;
+			productName = Toasts;
+		};
 		77DDAD492DC9A75A00333262 /* SymbolPicker */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 77DDAD482DC9A75A00333262 /* XCRemoteSwiftPackageReference "SymbolPicker" */;

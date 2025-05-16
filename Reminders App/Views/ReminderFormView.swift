@@ -7,11 +7,13 @@
 
 import SwiftUI
 import SymbolPicker
+import Toasts
 
 
 struct ReminderFormView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var manager: ReminderManager
+    @Environment(\.presentToast) var presentToast
     @State private var name = ""
     @State private var iconName = "star.fill"
     @State private var colour = Color.black
@@ -107,30 +109,76 @@ struct ReminderFormView: View {
             HStack(alignment: .center) {
                 Button(editMode ? "Apply Edit" : "Create reminder") {
                     print("button clicked")
-                    if (
-                        name != "" &&
-                        iconName != "" &&
-                        goalDate > Date()
-                    ) {
-                        print("Create reminder")
-                        let creationDate = Date()
-                        
-                        let newReminder = Reminder(
-                            name: name,
-                            iconName: iconName,
-                            colour: convertToRGBColor(color: colour),
-                            startDate: creationDate,
-                            goalDate: goalDate,
-                            complete: false,
-                            tags: tags
+                    if name.isEmpty {
+                            let toast = ToastValue(
+                                icon: Image(systemName: "exclamationmark.triangle"),
+                                message: "Name cannot be empty."
+                            )
+                            presentToast(toast)
+                    } else if iconName.isEmpty {
+                        let toast = ToastValue(
+                            icon: Image(systemName: "exclamationmark.triangle"),
+                            message: "Please choose an icon."
                         )
-                        
-                        if !editMode {
-                            manager.addReminder(reminder: newReminder)
-                        } else {
-                            manager.editReminder(id: id, newReminder: newReminder)
+                        presentToast(toast)
+                    }else if goalDate <= Date() {
+                        let toast = ToastValue(
+                            icon: Image(systemName: "exclamationmark.triangle"),
+                            message: "Date cannot be in the past."
+                        )
+                        presentToast(toast)
+                    }else {
+
+                        manager.hasNotificationPermission { granted in
+                            if granted {
+                                DispatchQueue.main.async {
+                                    print("Create reminder")
+                                    let creationDate = Date()
+                                    
+                                    let newReminder = Reminder(
+                                        name: name,
+                                        iconName: iconName,
+                                        colour: convertToRGBColor(color: colour),
+                                        startDate: creationDate,
+                                        goalDate: goalDate,
+                                        complete: false,
+                                        tags: tags
+                                    )
+                                    
+                                    if !editMode {
+                                        manager.addReminder(reminder: newReminder)
+                                    } else {
+                                        manager.editReminder(id: id, newReminder: newReminder)
+                                    }
+                                    dismiss()
+                                }
+                            } else {
+                                UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, settings in
+                                    if granted {
+                                        let toast = ToastValue(
+                                            icon: Image(systemName: "checkmark.circle"),
+                                            message: "Permissions successfully granted."
+                                        )
+                                    
+                                        presentToast(toast)
+                                    } else {
+                                        let toast = ToastValue(
+                                            icon: Image(systemName: "exclamationmark.triangle"),
+                                            message: "Permissions not granted.",
+                                            button: ToastButton(title: "Fix", color: .red, action: {
+                                                if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+                                                    if UIApplication.shared.canOpenURL(appSettings) {
+                                                        UIApplication.shared.open(appSettings)
+                                                    }
+                                                }
+                                            })
+                                        )
+                                    
+                                        presentToast(toast)
+                                    }
+                                }
+                            }
                         }
-                        dismiss()
                     }
                 }
                 .buttonStyle(.bordered)

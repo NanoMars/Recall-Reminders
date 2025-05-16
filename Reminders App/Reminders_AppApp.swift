@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Toasts
 
 @main
 struct Reminders_AppApp: App {
@@ -16,6 +17,7 @@ struct Reminders_AppApp: App {
             ContentView()
                 .environmentObject(viewManager)
                 .environmentObject(reminderManager)
+                .installToast(position: .bottom)
         }
     }
 }

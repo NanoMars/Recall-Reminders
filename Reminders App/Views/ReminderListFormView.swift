@@ -14,12 +14,14 @@
 //
 
 import SwiftUI
+import Toasts
 
 
 struct ReminderListFormView: View {
     @Environment(\.dismiss) var dismiss
     @EnvironmentObject var viewManager: ViewManager
     @EnvironmentObject var reminderManager: ReminderManager
+    @Environment(\.presentToast) var presentToast
     @State private var selectedSort: String = "goalDate"
     @State private var sortAscending: Bool = false
     @State private var showCompleted: Bool = true
@@ -78,7 +80,13 @@ struct ReminderListFormView: View {
                 }
                 Section {
                     Button(editMode ? "Apply Edits" : "Create View") {
-                        if name != "" {
+                        if name.isEmpty {
+                            let toast = ToastValue(
+                                icon: Image(systemName: "exclamationmark.triangle"),
+                                message: "Name cannot be empty."
+                            )
+                            presentToast(toast)
+                        } else {
                             let newView = FilteredView (
                                 name: name,
                                 sortBy: selectedSort,

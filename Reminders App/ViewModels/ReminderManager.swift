@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import UserNotifications
 
 class ReminderManager: ObservableObject {
     @Published var reminders: [Reminder] = []
@@ -39,11 +40,13 @@ class ReminderManager: ObservableObject {
         reminders.append(reminder)
         
         saveReminders()
+        scheduleNotification(for: reminder)
     }
     
     func removeReminder(id: UUID) {
         reminders.removeAll { $0.id == id}
         saveReminders()
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id.uuidString])
     }
     
     private func saveReminders() {
@@ -64,6 +67,7 @@ class ReminderManager: ObservableObject {
             reminders[index].complete = true
             reminders = reminders
             saveReminders()
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id.uuidString])
         }
     }
     func editReminder(id: UUID, newReminder: Reminder) {
@@ -71,6 +75,45 @@ class ReminderManager: ObservableObject {
             reminders[index] = newReminder
             reminders = reminders
             saveReminders()
+            if !newReminder.complete {
+                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id.uuidString])
+                scheduleNotification(for: newReminder)
+            }
+        }
+    }
+    
+    func scheduleNotification(for reminder: Reminder) {
+        let content = UNMutableNotificationContent()
+        content.title = "Reminder due"
+        content.body = "Your reminder \(reminder.name) is due"
+        content.sound = UNNotificationSound.default
+        
+        
+        
+        let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: reminder.goalDate)
+        
+        let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
+        let request = UNNotificationRequest(identifier: reminder.id.uuidString, content: content, trigger: trigger)
+        
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Error: \(error)")
+            }
+        }
+    }
+    
+    func hasNotificationPermission(completion: @escaping (Bool) -> Void) {
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            DispatchQueue.main.async {
+                switch settings.authorizationStatus {
+                case .authorized,   .provisional, .ephemeral:
+                    completion(true)
+                case .denied, .notDetermined:
+                    completion(false)
+                @unknown default:
+                    completion(false)
+                }
+            }
         }
     }
 }
