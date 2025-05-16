@@ -22,6 +22,7 @@ struct ReminderFormView: View {
     @State private var iconPickerPresented = false
     @State private var tags: [String] = []
     @State private var notificationTimes: [TimeInterval] = [0]
+    @State private var selectedMinutesBefore: TimeInterval = 0
     
     @State private var minimumGoalDate = Date()
     
@@ -106,19 +107,45 @@ struct ReminderFormView: View {
     }
     
     private var notificationSection: some View {
-        Section {
-            ForEach(0..<notificationTimes.count, id: \.self) { index in
-                
-                let minutesBefore = Int(notificationTimes[index] / 60)
-                Text(
-                    minutesBefore == 0
-                    ? "At end time"
-                    : "Notify \(minutesBefore) minute\(minutesBefore == 1 ? "" :"s") before")
+        Group {
+            Section {
+                ForEach(0..<notificationTimes.count, id: \.self) { index in
+                    
+                    let minutesBefore = Int(notificationTimes[index] / 60)
+                    Text(
+                        minutesBefore == 0
+                        ? "At end time"
+                        : "Notify \(minutesBefore) minute\(minutesBefore == 1 ? "" :"s") before")
                     .swipeActions(content: {
                         Button("Delete") {
                             notificationTimes.remove(at: index)
                         }
                     })
+                }
+            }
+            Section {
+                HStack {
+                    Button("Add new notification") {
+                        if notificationTimes.count < 3 {
+                            notificationTimes.append(selectedMinutesBefore)
+                            selectedMinutesBefore = 0
+                        }
+                    }
+                    Picker("Notify", selection: $selectedMinutesBefore) {
+                        ForEach(0..<61) { minutes in
+                            Text(
+                                minutes == 0
+                                ? " At end time"
+                                : " \(minutes) minute\(minutes == 1 ? "" :"s") before"
+                            )
+                            .tag(TimeInterval(minutes * 60))
+                        }
+                    }
+                    .pickerStyle(.wheel)
+                    
+                    
+                    
+                }
             }
         }
     }
