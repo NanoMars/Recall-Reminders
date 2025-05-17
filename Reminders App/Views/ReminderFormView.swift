@@ -21,8 +21,9 @@ struct ReminderFormView: View {
     @State private var goalDate = Date()
     @State private var iconPickerPresented = false
     @State private var tags: [String] = []
-    @State private var notificationTimes: [TimeInterval] = [0]
-    @State private var selectedMinutesBefore: TimeInterval = 0
+    @State private var notificationTimes: [TimeInterval] = []
+    @State private var selectedNotificationTimeStrings: [String] = ["0"]
+    
     
     @State private var minimumGoalDate = Date()
     
@@ -106,45 +107,47 @@ struct ReminderFormView: View {
         
     }
     
+    private func NotificationRow(index: Int) -> some View {
+        let binding = Binding(
+            get: {
+                selectedNotificationTimeStrings[index]
+            },
+            set: { newValue in
+                selectedNotificationTimeStrings[index] = newValue
+                if let minutes = Int(newValue) {
+                    notificationTimes[index] = TimeInterval(minutes * 60)
+                }
+            }
+        )
+        
+        let minutesBefore = Int(notificationTimes[index] / 60)
+        return HStack {
+            Text("Notify \(minutesBefore) minute\(minutesBefore == 1 ? "" :"s") before")
+            TextField("Minutes", text: binding)
+                .keyboardType(.numberPad)
+                .multilineTextAlignment(.trailing)
+        }
+        .swipeActions(content: {
+            Button("Delete") {
+                selectedNotificationTimeStrings.remove(at: index)
+            }
+        })
+    }
+    
     private var notificationSection: some View {
         Group {
             Section {
-                ForEach(0..<notificationTimes.count, id: \.self) { index in
-                    
-                    let minutesBefore = Int(notificationTimes[index] / 60)
-                    Text(
-                        minutesBefore == 0
-                        ? "At end time"
-                        : "Notify \(minutesBefore) minute\(minutesBefore == 1 ? "" :"s") before")
-                    .swipeActions(content: {
-                        Button("Delete") {
-                            notificationTimes.remove(at: index)
-                        }
-                    })
+                ForEach(0..<selectedNotificationTimeStrings.count, id: \.self) { index in
+                    NotificationRow(index: index)
                 }
             }
             Section {
                 HStack {
                     Button("Add new notification") {
-                        if notificationTimes.count < 3 {
-                            notificationTimes.append(selectedMinutesBefore)
-                            selectedMinutesBefore = 0
+                        if selectedNotificationTimeStrings.count < 3 {
+                            selectedNotificationTimeStrings.append("0")
                         }
                     }
-                    Picker("Notify", selection: $selectedMinutesBefore) {
-                        ForEach(0..<61) { minutes in
-                            Text(
-                                minutes == 0
-                                ? " At end time"
-                                : " \(minutes) minute\(minutes == 1 ? "" :"s") before"
-                            )
-                            .tag(TimeInterval(minutes * 60))
-                        }
-                    }
-                    .pickerStyle(.wheel)
-                    
-                    
-                    
                 }
             }
         }
