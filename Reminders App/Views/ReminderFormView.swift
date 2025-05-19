@@ -21,7 +21,7 @@ struct ReminderFormView: View {
     @State private var goalDate = Date()
     @State private var iconPickerPresented = false
     @State private var tags: [String] = []
-    @State private var notificationTimes: [TimeInterval] = []
+    @State private var notificationTimes: [TimeInterval] = [0]
     @State private var selectedNotificationTimeStrings: [String] = ["0"]
     
     
@@ -122,10 +122,12 @@ struct ReminderFormView: View {
         
         let minutesBefore = Int(notificationTimes[index] / 60)
         return HStack {
-            Text("Notify \(minutesBefore) minute\(minutesBefore == 1 ? "" :"s") before")
-            TextField("Minutes", text: binding)
+            Text("Notify")
+            TextField("", text: binding)
                 .keyboardType(.numberPad)
-                .multilineTextAlignment(.trailing)
+                .fixedSize(horizontal: true, vertical: false)
+                .padding(.horizontal, 0.0)
+            Text("minutes before")
         }
         .swipeActions(content: {
             Button("Delete") {
@@ -145,7 +147,8 @@ struct ReminderFormView: View {
                 HStack {
                     Button("Add new notification") {
                         if selectedNotificationTimeStrings.count < 3 {
-                            selectedNotificationTimeStrings.append("0")
+                            selectedNotificationTimeStrings.append("10")
+                            notificationTimes.append(10)
                         }
                     }
                 }
