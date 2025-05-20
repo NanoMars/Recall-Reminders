@@ -197,14 +197,16 @@ struct ReminderFormView: View {
                                         tags: tags
                                     )
                                     
+                                    manager.removeNotificationsFor(reminderID: id)
+                                    var notificationIDs: [UUID] = []
+                                    for time in notificationTimes {
+                                        notificationIDs.append(manager.scheduleNotification(for: newReminder, offset: (time * 60)))
+                                    }
+                                    newReminder.notificationIDs = notificationIDs
                                     if !editMode {
-                                        var notificationIDs: [UUID] = []
-                                        for time in notificationTimes {
-                                            notificationIDs.append(manager.scheduleNotification(for: newReminder, offset: time))
-                                        }
-                                        newReminder.notificationIDs = notificationIDs
                                         manager.addReminder(reminder: newReminder)
                                     } else {
+                                        
                                         manager.editReminder(id: id, newReminder: newReminder)
                                     }
                                     dismiss()
@@ -379,11 +381,18 @@ struct ReminderFormView: View {
                 startDate = tempReminder?.startDate ?? Date().addingTimeInterval(-3600)
                 goalDate = tempReminder?.goalDate ?? Date().addingTimeInterval(3600)
                 tags = tempReminder?.tags ?? []
+                print("notificationIDs = \(String(describing: tempReminder?.notificationIDs))")
+                notificationTimes = []
+                selectedNotificationTimeStrings = []
                 if tempReminder?.notificationIDs != nil && tempReminder?.notificationIDs.isEmpty == false {
+                    
                     for tempId in tempReminder?.notificationIDs ?? [] {
+                        print("processingNotificationID: \(tempId)")
                         getNotificationTime(endDate: goalDate, id: tempId) { offset in
+                            print("Notification id returned offset: \(String(describing: offset))")
                             if let offset = offset {
-                                notificationTimes.append(offset)
+                                print("Notification id returned offset: \(String(describing: offset))")
+                                notificationTimes.append(offset / 60)
                                 selectedNotificationTimeStrings.append(String(Int(offset / 60)))
                             }
                         }

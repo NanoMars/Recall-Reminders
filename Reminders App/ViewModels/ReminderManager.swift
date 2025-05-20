@@ -46,7 +46,7 @@ class ReminderManager: ObservableObject {
     func removeReminder(id: UUID) {
         reminders.removeAll { $0.id == id}
         saveReminders()
-        //UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id.uuidString])
+        removeNotificationsFor(reminderID: id)
     }
     
     private func saveReminders() {
@@ -96,6 +96,16 @@ class ReminderManager: ObservableObject {
             }
         }
         return id
+    }
+    
+    func removeNotificationsFor(reminderID: UUID) {
+        if let index = reminders.firstIndex(where: {$0.id == reminderID}) {
+            
+            let reminder = reminders[index]
+            let identifiers = reminder.notificationIDs.map {$0.uuidString}
+            
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: identifiers)
+        }
     }
     
     func hasNotificationPermission(completion: @escaping (Bool) -> Void) {
