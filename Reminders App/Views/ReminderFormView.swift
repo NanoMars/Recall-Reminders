@@ -379,7 +379,18 @@ struct ReminderFormView: View {
                 startDate = tempReminder?.startDate ?? Date().addingTimeInterval(-3600)
                 goalDate = tempReminder?.goalDate ?? Date().addingTimeInterval(3600)
                 tags = tempReminder?.tags ?? []
+                if tempReminder?.notificationIDs != nil && tempReminder?.notificationIDs.isEmpty == false {
+                    for tempId in tempReminder?.notificationIDs ?? [] {
+                        getNotificationTime(endDate: goalDate, id: tempId) { offset in
+                            if let offset = offset {
+                                notificationTimes.append(offset)
+                                selectedNotificationTimeStrings.append(String(Int(offset / 60)))
+                            }
+                        }
+                    }
+                }
                 // = tempReminder?.notificationTimes ?? [0]
+                
                 
             }
         }
@@ -388,6 +399,22 @@ struct ReminderFormView: View {
 
 func returnReminder(id: UUID, manager: ReminderManager) -> Reminder? {
     return manager.reminders.first(where: { $0.id == id })
+}
+
+func getNotificationTime(endDate: Date, id: UUID, completion: @escaping (TimeInterval?) -> Void) {
+    UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
+        guard
+            let request = requests.first(where: {$0.identifier == id.uuidString}),
+            let callTrigger = request.trigger as? UNCalendarNotificationTrigger,
+            let fireDate = Calendar.current.date(from: callTrigger.dateComponents)
+        else {
+            completion(nil)
+            return
+        }
+        
+        let interval = endDate.timeIntervalSince(fireDate)
+        completion(interval)
+    }
 }
 
 func convertToRGBColor(color: Color) -> RGBColor {
