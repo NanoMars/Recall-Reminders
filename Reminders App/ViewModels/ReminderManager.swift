@@ -40,13 +40,13 @@ class ReminderManager: ObservableObject {
         reminders.append(reminder)
         
         saveReminders()
-        scheduleNotification(for: reminder)
+        //scheduleNotification(for: reminder)
     }
     
     func removeReminder(id: UUID) {
         reminders.removeAll { $0.id == id}
         saveReminders()
-        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id.uuidString])
+        //UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id.uuidString])
     }
     
     private func saveReminders() {
@@ -67,7 +67,6 @@ class ReminderManager: ObservableObject {
             reminders[index].complete = true
             reminders = reminders
             saveReminders()
-            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id.uuidString])
         }
     }
     func editReminder(id: UUID, newReminder: Reminder) {
@@ -75,31 +74,28 @@ class ReminderManager: ObservableObject {
             reminders[index] = newReminder
             reminders = reminders
             saveReminders()
-            if !newReminder.complete {
-                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id.uuidString])
-                scheduleNotification(for: newReminder)
-            }
         }
     }
     
-    func scheduleNotification(for reminder: Reminder) {
+    func scheduleNotification(for reminder: Reminder, offset: TimeInterval) -> UUID {
         let content = UNMutableNotificationContent()
         content.title = "Reminder due"
         content.body = "Your reminder \(reminder.name) is due"
-        content.sound = UNNotificationSound.default
+        content.sound = UNNotificationSound.default 
+        let id = UUID()
         
         
-        
-        let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: reminder.goalDate)
+        let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: reminder.goalDate.addingTimeInterval(-offset))
         
         let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
-        let request = UNNotificationRequest(identifier: reminder.id.uuidString, content: content, trigger: trigger)
+        let request = UNNotificationRequest(identifier: id.uuidString, content: content, trigger: trigger)
         
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
                 print("Error: \(error)")
             }
         }
+        return id
     }
     
     func hasNotificationPermission(completion: @escaping (Bool) -> Void) {

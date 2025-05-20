@@ -198,6 +198,11 @@ struct ReminderFormView: View {
                                     )
                                     
                                     if !editMode {
+                                        var notificationIDs: [UUID] = []
+                                        for time in notificationTimes {
+                                            notificationIDs.append(manager.scheduleNotification(for: newReminder, offset: time))
+                                        }
+                                        newReminder.notificationIDs = notificationIDs
                                         manager.addReminder(reminder: newReminder)
                                     } else {
                                         manager.editReminder(id: id, newReminder: newReminder)
@@ -374,7 +379,7 @@ struct ReminderFormView: View {
                 startDate = tempReminder?.startDate ?? Date().addingTimeInterval(-3600)
                 goalDate = tempReminder?.goalDate ?? Date().addingTimeInterval(3600)
                 tags = tempReminder?.tags ?? []
-                notificationTimes = tempReminder?.notificationTimes ?? [0]
+                // = tempReminder?.notificationTimes ?? [0]
                 
             }
         }

@@ -23,10 +23,10 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
     @Published var goalDate: Date
     @Published var complete: Bool
     @Published var tags: [String]
-    @Published var notificationTimes: [TimeInterval]
+    @Published var notificationIDs: [UUID]
     
     enum CodingKeys: String, CodingKey {
-        case id, name, iconName, colour, startDate, goalDate, complete, tags, notificationTimes
+        case id, name, iconName, colour, startDate, goalDate, complete, tags, notificationIDs
     }
     
     
@@ -41,7 +41,7 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
         try container.encode(goalDate, forKey: .goalDate)
         try container.encode(complete, forKey: .complete)
         try container.encode(tags, forKey: .tags)
-        try container.encode(tags, forKey: .notificationTimes)
+        try container.encode(tags, forKey: .notificationIDs)
     }
     
     required init(from decoder: Decoder) throws {
@@ -55,7 +55,7 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
         goalDate = try container.decode(Date.self, forKey: .goalDate)
         complete = try container.decode(Bool.self, forKey: .complete)
         tags = try container.decode([String].self, forKey: .tags)
-        notificationTimes = try container.decode([TimeInterval].self, forKey: .notificationTimes)
+        notificationIDs = try container.decode([UUID].self, forKey: .notificationIDs)
     }
     
     static func == (lhs: Reminder, rhs: Reminder ) -> Bool {
@@ -67,7 +67,7 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
         lhs.goalDate == rhs.goalDate &&
         lhs.complete == rhs.complete &&
         lhs.tags == rhs.tags &&
-        lhs.notificationTimes == rhs.notificationTimes
+        lhs.notificationIDs == rhs.notificationIDs
     }
     
     init(
@@ -78,7 +78,7 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
         goalDate: Date,
         complete: Bool,
         tags: [String] = [],
-        notificationTimes: [TimeInterval] = []
+        notificationIDs: [UUID] = []
     ) {
         self.id = UUID()
         self.name = name
@@ -88,6 +88,6 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
         self.goalDate = goalDate
         self.complete = complete
         self.tags = tags
-        self.notificationTimes = notificationTimes
+        self.notificationIDs = notificationIDs
     }
 }
