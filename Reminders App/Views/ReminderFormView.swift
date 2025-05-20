@@ -115,7 +115,7 @@ struct ReminderFormView: View {
             set: { newValue in
                 selectedNotificationTimeStrings[index] = newValue
                 if let minutes = Int(newValue) {
-                    notificationTimes[index] = TimeInterval(minutes * 60)
+                    notificationTimes[index] = TimeInterval(minutes)
                 }
             }
         )
