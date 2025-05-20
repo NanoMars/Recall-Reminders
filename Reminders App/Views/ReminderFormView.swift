@@ -120,7 +120,6 @@ struct ReminderFormView: View {
             }
         )
         
-        let minutesBefore = Int(notificationTimes[index] / 60)
         return HStack {
             Text("Notify")
             TextField("", text: binding)

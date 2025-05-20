@@ -80,8 +80,8 @@ class ReminderManager: ObservableObject {
     func scheduleNotification(for reminder: Reminder, offset: TimeInterval) -> UUID {
         let content = UNMutableNotificationContent()
         content.title = "Reminder due"
-        content.body = "Your reminder \(reminder.name) is due"
-        content.sound = UNNotificationSound.default 
+        content.body = "Your reminder \(reminder.name) is due \(offset == 0 ? "" : "in \(Int(offset / 60)) minute \(Int(offset / 60) == 1 ? "" : "s")")"
+        content.sound = UNNotificationSound.default
         let id = UUID()
         
         
