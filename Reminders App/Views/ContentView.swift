@@ -34,6 +34,7 @@ struct ContentView: View {
                     NavigationLink(destination: SettingsView(settings: settings)) {
                         Image(systemName: "gear")
                     }
+                    .padding(.trailing)
                     
                 }
                 .sheet(isPresented: $isPresentingCreationForm, content: {
