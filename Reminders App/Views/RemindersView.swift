@@ -18,6 +18,7 @@ struct RemindersView: View {
     var sortAscending: Bool
     var filters: [String]
     var filtersExclusive: Bool
+    var showCompleted: Bool
     
     
     
@@ -39,12 +40,13 @@ struct RemindersView: View {
     
     var filteredReminders: [Reminder] {
         reminderList.filter{ reminder in
+            let tagMatch = filtersExclusive
+            ? reminder.tags.allSatisfy { !filters.contains($0)}
+            : reminder.tags.contains { filters.contains($0) }
             
-            if filtersExclusive {
-                return reminder.tags.allSatisfy{ !filters.contains($0) }
-            } else {
-                return reminder.tags.contains{ filters.contains($0)}
-            }
+            let completedMatch = showCompleted || !reminder.complete
+            
+            return tagMatch && completedMatch
         }
     }
     

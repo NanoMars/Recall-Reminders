@@ -92,7 +92,8 @@ struct ReminderListFormView: View {
                                 sortBy: selectedSort,
                                 sortAscending: sortAscending,
                                 filtersExclusive: filtersExclusive,
-                                filters: showCompleted ? filters : (filters + ["completed"]),
+                                filters: filters,
+                                show_completed: showCompleted
                             )
                             print(filtersExclusive, sortAscending)
                             if editMode {

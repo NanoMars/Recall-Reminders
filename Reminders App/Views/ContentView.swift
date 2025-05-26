@@ -38,7 +38,7 @@ struct ContentView: View {
                 Form {
                     ForEach(viewList) { view in
                         NavigationLink(destination: RemindersView(
-                            title: view.name, sortBy: view.sortBy, sortAscending: view.sortAscending, filters: view.filters, filtersExclusive: view.filtersExclusive
+                            title: view.name, sortBy: view.sortBy, sortAscending: view.sortAscending, filters: view.filters, filtersExclusive: view.filtersExclusive, showCompleted: view.show_completed
                         )) {
                             Text(view.name)
                         }
