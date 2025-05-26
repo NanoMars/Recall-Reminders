@@ -23,12 +23,5 @@ struct SettingsView: View {
             }
         }
         .navigationTitle("Settings")
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing, content: {
-                Button("Close") {
-                    dismiss()
-                }
-            })
-        }
     }
 }
