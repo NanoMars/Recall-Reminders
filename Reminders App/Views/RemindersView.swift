@@ -151,7 +151,7 @@ func convertToColor(rgb: RGBColor) -> Color {
 }
 
 #Preview {
-    ContentView()
+    ContentView(settings: SettingsManager.shared)
         .environmentObject(ViewManager())
         .environmentObject(ReminderManager())
 }

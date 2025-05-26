@@ -14,7 +14,7 @@ struct Reminders_AppApp: App {
     @StateObject var viewManager =  ViewManager()
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(settings: SettingsManager.shared)
                 .environmentObject(viewManager)
                 .environmentObject(reminderManager)
                 .installToast(position: .bottom)

@@ -14,6 +14,7 @@ extension UUID: Identifiable {
 struct ContentView: View {
     @EnvironmentObject var viewManager: ViewManager
     @EnvironmentObject var reminderManager: ReminderManager
+    @ObservedObject var settings: SettingsManager
     @State private var isPresentingCreationForm = false
     //@State private var isPresentingEditingForm = false
     @State private var selectedViewID: UUID?
@@ -23,11 +24,16 @@ struct ContentView: View {
         NavigationStack {
             VStack {
                 HStack {
-                    Spacer()
-                    Button("+") {
+                    Button(action: {
                         isPresentingCreationForm = true
+                    }) {
+                        Image(systemName: "plus")
                     }
-                    .padding(.trailing)
+                    .padding(.leading)
+                    Spacer()
+                    NavigationLink(destination: SettingsView(settings: settings)) {
+                        Image(systemName: "gear")
+                    }
                     
                 }
                 .sheet(isPresented: $isPresentingCreationForm, content: {
@@ -69,7 +75,7 @@ struct ContentView: View {
     
 }
 #Preview {
-    ContentView()
+    ContentView(settings: SettingsManager.shared)
         .environmentObject(ViewManager())
         .environmentObject(ReminderManager())
 }
