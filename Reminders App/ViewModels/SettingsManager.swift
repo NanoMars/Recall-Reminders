@@ -23,6 +23,7 @@ class SettingsManager: ObservableObject {
     @Published var theme: AppTheme {
         didSet {
             UserDefaults.standard.set(theme.rawValue, forKey: "theme")
+            print("theme updates to \(theme)")
         }
     }
     
