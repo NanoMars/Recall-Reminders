@@ -1,8 +1,8 @@
-## Onboarding - [SwiftyOnboard](https://github.com/juanpablofernandez/SwiftyOnboard)
+## Onboarding - [OnboardingKit](https://github.com/JamesSedlacek/OnboardingKit)
 
 MIT License
 
-Copyright (c) 2017 Juan Pablo Fernandez
+Copyright (c) 2024 James Sedlacek
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

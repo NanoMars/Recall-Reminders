@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		775EB3E22DE6C617008F0A36 /* OnboardingKit in Frameworks */ = {isa = PBXBuildFile; productRef = 775EB3E12DE6C617008F0A36 /* OnboardingKit */; };
 		77BAEF0C2DD6F9350084053D /* Toasts in Frameworks */ = {isa = PBXBuildFile; productRef = 77BAEF0B2DD6F9350084053D /* Toasts */; };
 		77DDAD4A2DC9A75A00333262 /* SymbolPicker in Frameworks */ = {isa = PBXBuildFile; productRef = 77DDAD492DC9A75A00333262 /* SymbolPicker */; };
 /* End PBXBuildFile section */
@@ -28,6 +29,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				775EB3E22DE6C617008F0A36 /* OnboardingKit in Frameworks */,
 				77BAEF0C2DD6F9350084053D /* Toasts in Frameworks */,
 				77DDAD4A2DC9A75A00333262 /* SymbolPicker in Frameworks */,
 			);
@@ -74,6 +76,7 @@
 			packageProductDependencies = (
 				77DDAD492DC9A75A00333262 /* SymbolPicker */,
 				77BAEF0B2DD6F9350084053D /* Toasts */,
+				775EB3E12DE6C617008F0A36 /* OnboardingKit */,
 			);
 			productName = "Reminders App";
 			productReference = 775F8C2A2DC73D09001B0FFF /* Reminders App.app */;
@@ -106,6 +109,7 @@
 			packageReferences = (
 				77DDAD482DC9A75A00333262 /* XCRemoteSwiftPackageReference "SymbolPicker" */,
 				77BAEF0A2DD6F9350084053D /* XCRemoteSwiftPackageReference "swiftui-toasts" */,
+				775EB3E02DE6C617008F0A36 /* XCRemoteSwiftPackageReference "OnboardingKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 775F8C2B2DC73D09001B0FFF /* Products */;
@@ -269,11 +273,12 @@
 				DEVELOPMENT_TEAM = HJJYPBG8DH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = RemindersApp;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -297,11 +302,12 @@
 				DEVELOPMENT_TEAM = HJJYPBG8DH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = RemindersApp;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -339,6 +345,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		775EB3E02DE6C617008F0A36 /* XCRemoteSwiftPackageReference "OnboardingKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/JamesSedlacek/OnboardingKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		77BAEF0A2DD6F9350084053D /* XCRemoteSwiftPackageReference "swiftui-toasts" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sunghyun-k/swiftui-toasts";
@@ -358,6 +372,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		775EB3E12DE6C617008F0A36 /* OnboardingKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 775EB3E02DE6C617008F0A36 /* XCRemoteSwiftPackageReference "OnboardingKit" */;
+			productName = OnboardingKit;
+		};
 		77BAEF0B2DD6F9350084053D /* Toasts */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 77BAEF0A2DD6F9350084053D /* XCRemoteSwiftPackageReference "swiftui-toasts" */;

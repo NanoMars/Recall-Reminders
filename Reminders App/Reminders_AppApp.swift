@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Toasts
+import OnboardingKit
 
 @main
 struct Reminders_AppApp: App {
@@ -19,6 +20,7 @@ struct Reminders_AppApp: App {
                 .environmentObject(viewManager)
                 .environmentObject(reminderManager)
                 .preferredColorScheme(colorSchemeFromTheme(settings.theme))
+                .showOnboardingIfNeeded(using: .prod)
                 .installToast(position: .bottom)
         }
     }

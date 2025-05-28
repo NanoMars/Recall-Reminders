@@ -1,6 +1,15 @@
 {
-  "originHash" : "33c9f9af648480fcf559f7142305790c24e6618d680052dc01227a5970b38b08",
+  "originHash" : "230475fc5641ec211d314c34d2e3393aabd0f5dd09fbab9c9fa6220a94d5682a",
   "pins" : [
+    {
+      "identity" : "onboardingkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/JamesSedlacek/OnboardingKit.git",
+      "state" : {
+        "revision" : "75afe9d3fca6e3089d6ea065e214d9fa98d34c25",
+        "version" : "1.0.0"
+      }
+    },
     {
       "identity" : "swiftui-toasts",
       "kind" : "remoteSourceControl",
