@@ -47,6 +47,11 @@ class ViewManager: ObservableObject {
             saveViews()
         }
     }
+    
+    func resetToDefaults() {
+        views.removeAll()
+        saveViews()
+    }
 }
 
 

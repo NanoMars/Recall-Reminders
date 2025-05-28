@@ -122,6 +122,12 @@ class ReminderManager: ObservableObject {
             }
         }
     }
+    
+    func resetToDefaults() {
+        reminders.removeAll()
+        saveReminders()
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+    }
 }
 
 

@@ -17,6 +17,8 @@ enum AppTheme: String, CaseIterable, Identifiable {
     var id: String { self.rawValue }
 }
 
+
+
 class SettingsManager: ObservableObject {
     static let shared = SettingsManager()
     
@@ -34,5 +36,10 @@ class SettingsManager: ObservableObject {
         } else {
             self.theme = .system
         }
+    }
+    
+    func resetToDefaults() {
+        theme = .system
+        UserDefaults.standard.removeObject(forKey: "theme")
     }
 }
