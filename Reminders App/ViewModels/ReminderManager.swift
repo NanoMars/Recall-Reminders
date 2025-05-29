@@ -36,10 +36,41 @@ class ReminderManager: ObservableObject {
         loadReminders()
     }
     
+    private func startRepeatTimer() {
+        Timer.publish(every: 60, on: .main, in: .common)
+            .autoconnect()
+            .sink { [weak self] _ in
+               // self?.handleAutoRepeats()
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func handleAutoRepeats() {
+        let now = Date()
+        var dirty = false
+        
+        for i in reminders.indices {
+            guard reminders[i].repeatTrigger == .atDueDate,
+                  reminders[i].goalDate <= now,
+                  let next = reminders[i].nextDueDate(from: reminders[i].goalDate)
+            else { continue }
+            
+            removeNotificationsFor(reminderID: reminders[i].id)
+            reminders[i].startDate = reminders[i].goalDate
+            reminders[i].goalDate = next
+            reminders[i].notificationIDs = [scheduleNotification(for: reminders[i], offset: 0)]
+            
+            dirty = true
+        }
+        
+        if dirty { saveReminders() }
+    }
+    
     func addReminder(reminder: Reminder) {
         reminders.append(reminder)
         
         saveReminders()
+        startRepeatTimer()
         //scheduleNotification(for: reminder)
     }
     

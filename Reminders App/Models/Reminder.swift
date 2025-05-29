@@ -13,6 +13,39 @@ struct RGBColor: Codable, Equatable {
     var b: Double
 }
 
+enum RepeatTrigger: String, CaseIterable, Codable, Identifiable {
+    case atDueDate
+    case afterCompletion
+    case none
+    var id: String { rawValue }
+}
+
+enum RepeatUnit: String, CaseIterable, Codable {
+    case minute, hour, day, week, month, year
+    
+    var calendarComponent: Calendar.Component {
+        switch self {
+        case .minute:
+            return .minute
+        case .hour:
+            return .hour
+        case .day:
+            return .day
+        case .week:
+            return .weekOfYear
+        case .month:
+            return .month
+        case .year:
+            return .year
+        }
+    }
+}
+
+struct RepeatRule: Codable, Equatable {
+    var value: Int
+    var unit: RepeatUnit
+}
+
 
 final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
     var id: UUID = UUID()
@@ -24,9 +57,12 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
     @Published var complete: Bool
     @Published var tags: [String]
     @Published var notificationIDs: [UUID]
+    @Published var repeatTrigger: RepeatTrigger
+    @Published var repeatRule: RepeatRule?
     
     enum CodingKeys: String, CodingKey {
         case id, name, iconName, colour, startDate, goalDate, complete, tags, notificationIDs
+        case repeatTrigger, repeatRule
     }
     
     
@@ -41,7 +77,9 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
         try container.encode(goalDate, forKey: .goalDate)
         try container.encode(complete, forKey: .complete)
         try container.encode(tags, forKey: .tags)
-        try container.encode(tags, forKey: .notificationIDs)
+        try container.encode(notificationIDs, forKey: .notificationIDs)
+        try container.encode(repeatTrigger, forKey: .repeatTrigger)
+        try container.encode(repeatRule, forKey: .repeatRule)
     }
     
     required init(from decoder: Decoder) throws {
@@ -56,6 +94,8 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
         complete = try container.decode(Bool.self, forKey: .complete)
         tags = try container.decode([String].self, forKey: .tags)
         notificationIDs = try container.decode([UUID].self, forKey: .notificationIDs)
+        repeatTrigger = try container.decodeIfPresent(RepeatTrigger.self, forKey: .repeatTrigger) ?? .none
+        repeatRule = try container.decodeIfPresent(RepeatRule.self, forKey: .repeatRule)
     }
     
     static func == (lhs: Reminder, rhs: Reminder ) -> Bool {
@@ -78,7 +118,9 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
         goalDate: Date,
         complete: Bool,
         tags: [String] = [],
-        notificationIDs: [UUID] = []
+        notificationIDs: [UUID] = [],
+        repeatTrigger: RepeatTrigger = .none,
+        repeatRule: RepeatRule? = nil
     ) {
         self.id = UUID()
         self.name = name
@@ -89,5 +131,12 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
         self.complete = complete
         self.tags = tags
         self.notificationIDs = notificationIDs
+        self.repeatRule = repeatRule
+        self.repeatTrigger = repeatTrigger
+    }
+    
+    func nextDueDate(from reference: Date) -> Date? {
+        guard let rule = repeatRule else { return nil }
+        return Calendar.current.date(byAdding: rule.unit.calendarComponent, value: rule.value, to: reference)
     }
 }
