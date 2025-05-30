@@ -56,6 +56,7 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
     @Published var goalDate: Date
     @Published var complete: Bool
     @Published var tags: [String]
+    //@Published var notificationTimes: TimeInterval
     @Published var notificationIDs: [UUID]
     @Published var repeatTrigger: RepeatTrigger
     @Published var repeatRule: RepeatRule?

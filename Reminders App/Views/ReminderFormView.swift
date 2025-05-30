@@ -436,6 +436,10 @@ struct ReminderFormView: View {
                 print("notificationIDs = \(String(describing: tempReminder?.notificationIDs))")
                 notificationTimes = []
                 selectedNotificationTimeStrings = []
+                repeatTrigger = tempReminder?.repeatTrigger ?? .none
+                repeatUnit = tempReminder?.repeatRule?.unit ?? .day
+                repeatValueString = String(tempReminder?.repeatRule?.value ?? 1)
+                
                 if tempReminder?.notificationIDs != nil && tempReminder?.notificationIDs.isEmpty == false {
                     
                     for tempId in tempReminder?.notificationIDs ?? [] {
