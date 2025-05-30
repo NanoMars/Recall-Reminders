@@ -33,10 +33,13 @@ struct ReminderFormView: View {
     @State private var notificationTimes: [TimeInterval] = [0]
     @State private var selectedNotificationTimeStrings: [String] = ["0"]
     @State private var repeatTrigger: RepeatTrigger = .none
-    
-    
     @State private var repeatValueString: String = "1"
     @State private var repeatUnit: RepeatUnit = .day
+    
+   
+    
+    
+    
     
     
     @State private var minimumGoalDate = Date()
@@ -91,17 +94,14 @@ struct ReminderFormView: View {
     private var repeatSection: some View {
 
         Section("Repeat") {
-            VStack {
-                HStack {
-                    Picker("", selection: $repeatTrigger) {
-                        ForEach(RepeatTrigger.allCases) { trig in
-                            Text(trig.displayName)
-                                .tag(trig)
-                        }
-                        .
-                    }
-                    Spacer()
+            Picker("", selection: $repeatTrigger) {
+                ForEach(RepeatTrigger.allCases) { trig in
+                    Text(trig.displayName)
+                        .tag(trig)
                 }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            if repeatTrigger != .none {
                 HStack {
                     Text("Every")
                     TextField("1", text: $repeatValueString)
@@ -115,8 +115,6 @@ struct ReminderFormView: View {
                         }
                     }
                     .pickerStyle(.menu)
-                    
-                    
                 }
             }
         }
@@ -229,6 +227,10 @@ struct ReminderFormView: View {
                     }else {
 
                         manager.hasNotificationPermission { granted in
+                            let repeatValue = Int(repeatValueString) ?? 0
+                            let validRepeat = repeatValue > 0
+                            let resolvedRepeatRule: RepeatRule? = validRepeat ? RepeatRule(value: repeatValue, unit: repeatUnit) : nil
+                            let resolvedRepeatTrigger: RepeatTrigger = validRepeat ? repeatTrigger : .none
                             if granted {
                                 DispatchQueue.main.async {
                                     print("Create reminder")
@@ -241,7 +243,9 @@ struct ReminderFormView: View {
                                         startDate: creationDate,
                                         goalDate: goalDate,
                                         complete: false,
-                                        tags: tags
+                                        tags: tags,
+                                        repeatTrigger: resolvedRepeatTrigger,
+                                        repeatRule: resolvedRepeatRule
                                     )
                                     
                                     manager.removeNotificationsFor(reminderID: id)
