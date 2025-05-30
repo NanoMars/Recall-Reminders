@@ -50,18 +50,21 @@ class ReminderManager: ObservableObject {
         let now = Date()
         var dirty = false
         
+        
         for i in reminders.indices {
-            guard reminders[i].repeatTrigger == .atDueDate,
-                  reminders[i].goalDate <= now,
-                  let next = reminders[i].nextDueDate(from: reminders[i].goalDate)
+            let r = reminders[i]
+            guard r.repeatTrigger == .atDueDate,
+                  r.goalDate <= now,
+                  let next = r.nextDueDate(from: r.goalDate)
             else { continue }
             
-            removeNotificationsFor(reminderID: reminders[i].id)
-            reminders[i].startDate = reminders[i].goalDate
-            reminders[i].goalDate = next
-            reminders[i].notificationIDs = [scheduleNotification(for: reminders[i], offset: 0)]
+            removeNotificationsFor(reminderID: r.id)
+            r.startDate = r.goalDate
+            r.goalDate = next
+            r.notificationIDs = [scheduleNotification(for: r, offset: 0)]
             
             dirty = true
+            reminders[i] = r
         }
         
         if dirty { saveReminders() }
