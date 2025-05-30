@@ -34,13 +34,14 @@ class ReminderManager: ObservableObject {
     
     init() {
         loadReminders()
+        startRepeatTimer()
     }
     
     private func startRepeatTimer() {
         Timer.publish(every: 60, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
-               // self?.handleAutoRepeats()
+               self?.handleAutoRepeats()
             }
             .store(in: &cancellables)
     }
@@ -70,7 +71,6 @@ class ReminderManager: ObservableObject {
         reminders.append(reminder)
         
         saveReminders()
-        startRepeatTimer()
         //scheduleNotification(for: reminder)
     }
     
@@ -94,11 +94,32 @@ class ReminderManager: ObservableObject {
     }
     
     func markComplete(id: UUID) {
+        /*
         if let index = reminders.firstIndex(where: {$0.id == id}) {
             reminders[index].complete = true
             reminders = reminders
             saveReminders()
+        }*/
+        
+        guard let index = reminders.firstIndex(where: {$0.id == id}) else {return}
+        
+        var r = reminders[index]
+        r.complete = true
+        
+        if r.repeatTrigger == .afterCompletion,
+           let next = r.nextDueDate(from: Date()) {
+                
+                r.complete = false
+                r.startDate = Date()
+                r.goalDate = next
+                
+                removeNotificationsFor(reminderID: r.id)
+                
+                r.notificationIDs = [scheduleNotification(for: r, offset: 0)]
         }
+        
+        reminders[index] = r
+        saveReminders()
     }
     func editReminder(id: UUID, newReminder: Reminder) {
         if let index = reminders.firstIndex(where: {$0.id == id}) {

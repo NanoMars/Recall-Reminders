@@ -9,6 +9,15 @@ import SwiftUI
 import SymbolPicker
 import Toasts
 
+extension RepeatTrigger {
+    var displayName: String {
+        switch self {
+        case .none: return "Don't repeat"
+        case .atDueDate: return "Repeat at due date"
+        case .afterCompletion: return "Reapeat after completion"
+        }
+    }
+}
 
 struct ReminderFormView: View {
     @Environment(\.dismiss) var dismiss
@@ -23,6 +32,11 @@ struct ReminderFormView: View {
     @State private var tags: [String] = []
     @State private var notificationTimes: [TimeInterval] = [0]
     @State private var selectedNotificationTimeStrings: [String] = ["0"]
+    @State private var repeatTrigger: RepeatTrigger = .none
+    
+    
+    @State private var repeatValueString: String = "1"
+    @State private var repeatUnit: RepeatUnit = .day
     
     
     @State private var minimumGoalDate = Date()
@@ -72,6 +86,40 @@ struct ReminderFormView: View {
             }
         }
         .listRowBackground(Color.clear)
+    }
+    
+    private var repeatSection: some View {
+
+        Section("Repeat") {
+            VStack {
+                HStack {
+                    Picker("", selection: $repeatTrigger) {
+                        ForEach(RepeatTrigger.allCases) { trig in
+                            Text(trig.displayName)
+                                .tag(trig)
+                        }
+                        .
+                    }
+                    Spacer()
+                }
+                HStack {
+                    Text("Every")
+                    TextField("1", text: $repeatValueString)
+                        .keyboardType(.numberPad)
+                        .fixedSize(horizontal: true, vertical: false)
+                        .padding(.horizontal, 0.0)
+                    Picker("", selection: $repeatUnit) {
+                        ForEach(RepeatUnit.allCases, id: \.self) { unit in
+                            Text(unit.rawValue)
+                                .tag(unit)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    
+                    
+                }
+            }
+        }
     }
     
     private var basicFieldSection: some View {
@@ -344,6 +392,7 @@ struct ReminderFormView: View {
                 Form {
                     progressSection
                     basicFieldSection
+                    repeatSection
                     multiPickerSection
                     notificationSection
                     footerSection

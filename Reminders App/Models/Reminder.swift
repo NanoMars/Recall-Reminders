@@ -107,7 +107,9 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
         lhs.goalDate == rhs.goalDate &&
         lhs.complete == rhs.complete &&
         lhs.tags == rhs.tags &&
-        lhs.notificationIDs == rhs.notificationIDs
+        lhs.notificationIDs == rhs.notificationIDs &&
+        lhs.repeatTrigger == rhs.repeatTrigger &&
+        lhs.repeatRule == rhs.repeatRule
     }
     
     init(
