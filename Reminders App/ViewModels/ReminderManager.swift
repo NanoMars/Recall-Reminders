@@ -38,7 +38,7 @@ class ReminderManager: ObservableObject {
     }
     
     private func startRepeatTimer() {
-        Timer.publish(every: 60, on: .main, in: .common)
+        Timer.publish(every: 1, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
                self?.handleAutoRepeats()
