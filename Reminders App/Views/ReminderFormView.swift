@@ -436,23 +436,9 @@ struct ReminderFormView: View {
                 repeatUnit = tempReminder?.repeatRule?.unit ?? .day
                 repeatValueString = String(tempReminder?.repeatRule?.value ?? 1)
                 
-                if tempReminder?.notificationIDs != nil && tempReminder?.notificationIDs.isEmpty == false {
-                    
-                    for tempId in tempReminder?.notificationIDs ?? [] {
-                        print("processingNotificationID: \(tempId)")
-                        getNotificationTime(endDate: goalDate, id: tempId) { offset in
-                            print("Notification id returned offset: \(String(describing: offset))")
-                            if let offset = offset {
-                                print("Notification id returned offset: \(String(describing: offset))")
-                                notificationTimes.append(offset / 60)
-                                selectedNotificationTimeStrings.append(String(Int(offset / 60)))
-                            }
-                        }
-                    }
-                }
-                // = tempReminder?.notificationTimes ?? [0]
-                
-                
+                let times = tempReminder?.notificationTimes ?? [0]
+                notificationTimes = times.map {$0 / 60}
+                selectedNotificationTimeStrings = times.map {String(Int($0 / 60))}
             }
         }
     }

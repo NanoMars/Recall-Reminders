@@ -106,7 +106,7 @@ class ReminderManager: ObservableObject {
         
         guard let index = reminders.firstIndex(where: {$0.id == id}) else {return}
         
-        var r = reminders[index]
+        let r = reminders[index]
         r.complete = true
         
         if r.repeatTrigger == .afterCompletion,
