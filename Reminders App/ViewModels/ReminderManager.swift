@@ -135,7 +135,7 @@ class ReminderManager: ObservableObject {
     func scheduleNotification(for reminder: Reminder, offset: TimeInterval) -> UUID {
         let content = UNMutableNotificationContent()
         content.title = "Reminder due"
-        content.body = "Your reminder \(reminder.name) is due \(offset == 0 ? "" : "in \(Int(offset / 60)) minute \(Int(offset / 60) == 1 ? "" : "s")")"
+        content.body = generateNotificationBody(reminder.id, offset: offset)
         content.sound = UNNotificationSound.default
         let id = UUID()
         
@@ -153,10 +153,17 @@ class ReminderManager: ObservableObject {
         return id
     }
     
+    func generateNotificationBody(reminderID: UUID, offset: TimeInterval) -> String {
+        guard let index = reminders.firstIndex(where: {$0.id == reminderID}) else {return ""}
+        let reminder = reminders[index]
+        
+        return "Your reminder \(reminder.name) is due \(offset == 0 ? "" : "in \(Int(offset / 60)) minute \(Int(offset / 60) == 1 ? "" : "s")")"
+    }
+    
     private func calculateNotifications() {
         let now = Date()
         
-        var userNotificationTimes: [TimeInterval] = []
+        var userNotificationTimes: [(Date, UUID, TimeInterval)] = []
         var repeatingUserNotificationTimes: [(UUID, TimeInterval, TimeInterval)] = []
         var userNotificationIDs: [UUID] = []
         var generatedNotificationIDs: [UUID] = []
@@ -193,7 +200,8 @@ class ReminderManager: ObservableObject {
                     repeatingUserNotificationTimes.append((reminder.id, notificationTime, repeatInterval))
                     
                 } else {
-                    userNotificationTimes.append(notificationTime)
+                    userNotificationTimes.append((dueDate.addingTimeInterval(-notificationTime), reminder.id, notificationTime))
+                    
                     
                 }
                 absoluteUserNotificationTimes.append(dueDate.addingTimeInterval(-notificationTime))
@@ -219,7 +227,12 @@ class ReminderManager: ObservableObject {
                 
             }
         }
-        var uncutRepeatingNotificationTimes: [(Date, UUID)] = []
+
+        
+        
+        var uncutRepeatingNotificationTimes: [(Date, UUID, TimeInterval)] = []
+        
+        let freeSpace: Int = 64
         
         for time in repeatingUserNotificationTimes {
             let reminderID = time.0
@@ -229,17 +242,40 @@ class ReminderManager: ObservableObject {
             let r = reminders[index]
             let baseDate = r.goalDate
             
-            for i in 0..<64 {
+            for i in 1...freeSpace {
                 let asdf = baseDate.addingTimeInterval(-notificationTime + (Double(i) * repeatInterval))
-                uncutRepeatingNotificationTimes.append((asdf,reminderID))
+                uncutRepeatingNotificationTimes.append((asdf,reminderID, notificationTime))
             }
         }
+        var existingNotifications: [(Date,String,String)] = []
+        let group = DispatchGroup()
+        group.enter()
+        UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
+            for request in requests {
+                if let trigger = request.trigger as? UNCalendarNotificationTrigger,
+                   let fireDate = Calendar.current.date(from: trigger.dateComponents) {
+                    existingNotifications.append((fireDate, request.content.body, request.identifier))
+                }
+            }
+            group.leave()
+        }
+        group.wait()
+        //let preExistingNotifications = UNUserNotificationCenter.current()
         
-        let cutRepeatingNotificationTimes = uncutRepeatingNotificationTimes
+        let cutNotificationTimes = uncutRepeatingNotificationTimes + userNotificationTimes
             .filter { $0.0 > now }
             .sorted { $0.0 < $1.0 }
-            .prefix(64)
-        
+            .prefix(freeSpace)
+         
+        for notification in cutNotificationTimes {
+            let exists = existingNotifications.contains { existing in
+                existing.0 == notification.0 &&
+                existing.1 == generateNotificationBody(reminderID: notification.1, offset: notification.2)
+            }
+            if !exists {
+                // schedule notification
+            }
+        }
     }
     
     func removeNotificationsFor(reminderID: UUID) {
