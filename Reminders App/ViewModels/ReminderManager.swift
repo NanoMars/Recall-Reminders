@@ -157,7 +157,7 @@ class ReminderManager: ObservableObject {
         let now = Date()
         
         var userNotificationTimes: [TimeInterval] = []
-        var repeatingUserNotificationTimes: [(Date, TimeInterval, TimeInterval)] = []
+        var repeatingUserNotificationTimes: [(UUID, TimeInterval, TimeInterval)] = []
         var userNotificationIDs: [UUID] = []
         var generatedNotificationIDs: [UUID] = []
         
@@ -190,11 +190,11 @@ class ReminderManager: ObservableObject {
             for notificationTime in reminder.notificationTimes {
                 
                 if repeating {
-                    repeatingUserNotificationTimes.append((reminder.goalDate, notificationTime, repeatInterval))
+                    repeatingUserNotificationTimes.append((reminder.id, notificationTime, repeatInterval))
                     
                 } else {
                     userNotificationTimes.append(notificationTime)
-
+                    
                 }
                 absoluteUserNotificationTimes.append(dueDate.addingTimeInterval(-notificationTime))
             }
@@ -219,14 +219,26 @@ class ReminderManager: ObservableObject {
                 
             }
         }
-        var uncutRepeatingNotificationTimes: [Date] = []
+        var uncutRepeatingNotificationTimes: [(Date, UUID)] = []
         
         for time in repeatingUserNotificationTimes {
+            let reminderID = time.0
+            let notificationTime = time.1
+            let repeatInterval = time.2
+            guard let index = reminders.firstIndex(where: {$0.id == reminderID}) else {continue}
+            let r = reminders[index]
+            let baseDate = r.goalDate
             
             for i in 0..<64 {
-                
+                let asdf = baseDate.addingTimeInterval(-notificationTime + (Double(i) * repeatInterval))
+                uncutRepeatingNotificationTimes.append((asdf,reminderID))
             }
         }
+        
+        let cutRepeatingNotificationTimes = uncutRepeatingNotificationTimes
+            .filter { $0.0 > now }
+            .sorted { $0.0 < $1.0 }
+            .prefix(64)
         
     }
     
