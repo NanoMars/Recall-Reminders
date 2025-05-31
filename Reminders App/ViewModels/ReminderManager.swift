@@ -153,6 +153,47 @@ class ReminderManager: ObservableObject {
         return id
     }
     
+    private func calculateNotifications() {
+        let now = Date()
+        
+        var userNotificationTimes: [(TimeInterval, Bool)] = []
+        var userNotificationIDs: [UUID] = []
+        var generatedNotificationIDs: [UUID] = []
+        
+        for reminder in reminders {
+            let dueDate = reminder.goalDate
+            var absoluteUserNotificationTimes: [Date] = []
+            let repeating: Bool = reminder.repeatTrigger == .atDueDate
+            
+            for notificationTime in reminder.notificationTimes {
+                userNotificationTimes.append((notificationTime, repeating))
+                absoluteUserNotificationTimes.append(dueDate.addingTimeInterval(-notificationTime))
+            }
+            
+            for notificationId in reminder.notificationIDs {
+                // let notificationDate: Date = ...
+                UNUserNotificationCenter.current().getPendingNotificationRequests { requests in
+                    let UUIDString = notificationId.uuidString
+                    if let request = requests.first(where: {$0.identifier == UUIDString}),
+                       let callTrigger = request.trigger as? UNCalendarNotificationTrigger {
+                        if let fireDate = Calendar.current.date(from: callTrigger.dateComponents),
+                           absoluteUserNotificationTimes.contains(fireDate) {
+                            userNotificationIDs.append(notificationId)
+                        } else {
+                            generatedNotificationIDs.append(notificationId)
+                        }
+                    } else {
+                        print("notification not valid, remove it from reminder")
+                    }
+                    
+                }
+                
+            }
+        }
+        
+        
+    }
+    
     func removeNotificationsFor(reminderID: UUID) {
         if let index = reminders.firstIndex(where: {$0.id == reminderID}) {
             
