@@ -35,6 +35,7 @@ class ReminderManager: ObservableObject {
     init() {
         loadReminders()
         startRepeatTimer()
+        calculateNotifications()
     }
     
     private func startRepeatTimer() {
@@ -61,7 +62,6 @@ class ReminderManager: ObservableObject {
             removeNotificationsFor(reminderID: r.id)
             r.startDate = r.goalDate
             r.goalDate = next
-            r.notificationIDs = [scheduleNotification(for: r, offset: 0)]
             
             dirty = true
             reminders[i] = r
@@ -72,15 +72,15 @@ class ReminderManager: ObservableObject {
     
     func addReminder(reminder: Reminder) {
         reminders.append(reminder)
-        
         saveReminders()
-        //scheduleNotification(for: reminder)
+        calculateNotifications()
     }
     
     func removeReminder(id: UUID) {
         reminders.removeAll { $0.id == id}
         saveReminders()
         removeNotificationsFor(reminderID: id)
+        calculateNotifications()
     }
     
     private func saveReminders() {
@@ -118,7 +118,6 @@ class ReminderManager: ObservableObject {
                 
                 removeNotificationsFor(reminderID: r.id)
                 
-                r.notificationIDs = [scheduleNotification(for: r, offset: 0)]
         }
         
         reminders[index] = r
@@ -129,20 +128,21 @@ class ReminderManager: ObservableObject {
             reminders[index] = newReminder
             reminders = reminders
             saveReminders()
+            calculateNotifications()
         }
     }
     
-    func scheduleNotification(for reminder: Reminder, offset: TimeInterval) -> UUID {
+    private func scheduleNotification(at fireDate: Date, body: String) -> UUID {
         let content = UNMutableNotificationContent()
         content.title = "Reminder due"
-        content.body = generateNotificationBody(reminder.id, offset: offset)
+        content.body = body
         content.sound = UNNotificationSound.default
         let id = UUID()
         
         
-        let triggerDate = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: reminder.goalDate.addingTimeInterval(-offset))
         
-        let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDate, repeats: false)
+        let comps = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: fireDate)
+        let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
         let request = UNNotificationRequest(identifier: id.uuidString, content: content, trigger: trigger)
         
         UNUserNotificationCenter.current().add(request) { error in
@@ -262,18 +262,35 @@ class ReminderManager: ObservableObject {
         group.wait()
         //let preExistingNotifications = UNUserNotificationCenter.current()
         
-        let cutNotificationTimes = uncutRepeatingNotificationTimes + userNotificationTimes
+        let desiredNotifications = uncutRepeatingNotificationTimes + userNotificationTimes
             .filter { $0.0 > now }
             .sorted { $0.0 < $1.0 }
             .prefix(freeSpace)
          
-        for notification in cutNotificationTimes {
+        for notification in desiredNotifications {
             let exists = existingNotifications.contains { existing in
                 existing.0 == notification.0 &&
                 existing.1 == generateNotificationBody(reminderID: notification.1, offset: notification.2)
             }
             if !exists {
-                // schedule notification
+                let body = generateNotificationBody(reminderID: notification.1, offset: notification.2)
+                let id = scheduleNotification(at: notification.0, body: body)
+                if let index = reminders.firstIndex(where: {$0.id == notification.1}) {
+                    let r = reminders[index]
+                    if !r.notificationIDs.contains(id) {
+                        r.notificationIDs.append(id)
+                    }
+                    reminders[index] = r
+                }
+            }
+        }
+        for notification in existingNotifications {
+            let exists = desiredNotifications.contains { desired in
+                desired.0 == notification.0 &&
+                generateNotificationBody(reminderID: desired.1, offset: desired.2) == notification.1
+            }
+            if !exists {
+                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notification.2])
             }
         }
     }

@@ -248,12 +248,8 @@ struct ReminderFormView: View {
                                         repeatRule: resolvedRepeatRule
                                     )
                                     
-                                    manager.removeNotificationsFor(reminderID: id)
-                                    var notificationIDs: [UUID] = []
-                                    for time in notificationTimes {
-                                        notificationIDs.append(manager.scheduleNotification(for: newReminder, offset: (time * 60)))
-                                    }
-                                    newReminder.notificationIDs = notificationIDs
+                                    let timesInSeconds = notificationTimes.map {$0 * 60}
+                                    newReminder.notificationTimes = timesInSeconds
                                     if !editMode {
                                         manager.addReminder(reminder: newReminder)
                                     } else {
@@ -476,7 +472,7 @@ func getNotificationTime(endDate: Date, id: UUID, completion: @escaping (TimeInt
             completion(nil)
             return
         }
-        
+         
         let interval = endDate.timeIntervalSince(fireDate)
         completion(interval)
     }
