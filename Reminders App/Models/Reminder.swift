@@ -56,7 +56,7 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
     @Published var goalDate: Date
     @Published var complete: Bool
     @Published var tags: [String]
-    //@Published var notificationTimes: TimeInterval
+    @Published var notificationTimes: [TimeInterval]
     @Published var notificationIDs: [UUID]
     @Published var repeatTrigger: RepeatTrigger
     @Published var repeatRule: RepeatRule?
@@ -64,6 +64,7 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
     enum CodingKeys: String, CodingKey {
         case id, name, iconName, colour, startDate, goalDate, complete, tags, notificationIDs
         case repeatTrigger, repeatRule
+        case notificationTimes
     }
     
     
@@ -78,6 +79,7 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
         try container.encode(goalDate, forKey: .goalDate)
         try container.encode(complete, forKey: .complete)
         try container.encode(tags, forKey: .tags)
+        try container.encode(notificationTimes, forKey: .notificationTimes)
         try container.encode(notificationIDs, forKey: .notificationIDs)
         try container.encode(repeatTrigger, forKey: .repeatTrigger)
         try container.encode(repeatRule, forKey: .repeatRule)
@@ -94,6 +96,7 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
         goalDate = try container.decode(Date.self, forKey: .goalDate)
         complete = try container.decode(Bool.self, forKey: .complete)
         tags = try container.decode([String].self, forKey: .tags)
+        notificationTimes = try container.decode([TimeInterval].self, forKey: .notificationTimes)
         notificationIDs = try container.decode([UUID].self, forKey: .notificationIDs)
         repeatTrigger = try container.decodeIfPresent(RepeatTrigger.self, forKey: .repeatTrigger) ?? .none
         repeatRule = try container.decodeIfPresent(RepeatRule.self, forKey: .repeatRule)
@@ -108,6 +111,7 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
         lhs.goalDate == rhs.goalDate &&
         lhs.complete == rhs.complete &&
         lhs.tags == rhs.tags &&
+        lhs.notificationTimes == rhs.notificationTimes &&
         lhs.notificationIDs == rhs.notificationIDs &&
         lhs.repeatTrigger == rhs.repeatTrigger &&
         lhs.repeatRule == rhs.repeatRule
@@ -121,6 +125,7 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
         goalDate: Date,
         complete: Bool,
         tags: [String] = [],
+        notificationTimes: [TimeInterval] = [],
         notificationIDs: [UUID] = [],
         repeatTrigger: RepeatTrigger = .none,
         repeatRule: RepeatRule? = nil
@@ -133,6 +138,7 @@ final class Reminder: ObservableObject, Identifiable, Codable, Equatable {
         self.goalDate = goalDate
         self.complete = complete
         self.tags = tags
+        self.notificationTimes = notificationTimes
         self.notificationIDs = notificationIDs
         self.repeatRule = repeatRule
         self.repeatTrigger = repeatTrigger
