@@ -224,11 +224,17 @@ struct ReminderFormView: View {
                             message: "Date cannot be in the past."
                         )
                         presentToast(toast)
+                    }else if repeatTrigger != .none && !(Int(repeatValueString) ?? 0 >= (repeatUnit == .minute ? 5 : 1)) {
+                        let toast = ToastValue(
+                            icon: Image(systemName: "exclamationmark.triangle"),
+                            message: "Repeat interval must be at least 5 minutes."
+                        )
+                        presentToast(toast)
                     }else {
 
                         manager.hasNotificationPermission { granted in
                             let repeatValue = Int(repeatValueString) ?? 0
-                            let validRepeat = repeatValue > 0
+                            let validRepeat = repeatValue >= (repeatUnit == .minute ? 5 : 1)
                             let resolvedRepeatRule: RepeatRule? = validRepeat ? RepeatRule(value: repeatValue, unit: repeatUnit) : nil
                             let resolvedRepeatTrigger: RepeatTrigger = validRepeat ? repeatTrigger : .none
                             if granted {

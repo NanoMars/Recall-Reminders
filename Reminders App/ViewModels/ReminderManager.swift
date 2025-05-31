@@ -242,7 +242,7 @@ class ReminderManager: ObservableObject {
             let r = reminders[index]
             let baseDate = r.goalDate
             
-            for i in 1...freeSpace {
+            for i in 0...freeSpace {
                 let asdf = baseDate.addingTimeInterval(-notificationTime + (Double(i) * repeatInterval))
                 uncutRepeatingNotificationTimes.append((asdf,reminderID, notificationTime))
             }
@@ -266,24 +266,7 @@ class ReminderManager: ObservableObject {
             .filter { $0.0 > now }
             .sorted { $0.0 < $1.0 }
             .prefix(freeSpace)
-         
-        for notification in desiredNotifications {
-            let exists = existingNotifications.contains { existing in
-                existing.0 == notification.0 &&
-                existing.1 == generateNotificationBody(reminderID: notification.1, offset: notification.2)
-            }
-            if !exists {
-                let body = generateNotificationBody(reminderID: notification.1, offset: notification.2)
-                let id = scheduleNotification(at: notification.0, body: body)
-                if let index = reminders.firstIndex(where: {$0.id == notification.1}) {
-                    let r = reminders[index]
-                    if !r.notificationIDs.contains(id) {
-                        r.notificationIDs.append(id)
-                    }
-                    reminders[index] = r
-                }
-            }
-        }
+        
         for notification in existingNotifications {
             let exists = desiredNotifications.contains { desired in
                 desired.0 == notification.0 &&
@@ -293,6 +276,26 @@ class ReminderManager: ObservableObject {
                 UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notification.2])
             }
         }
+         
+        for notification in desiredNotifications {
+            let exists = existingNotifications.contains { existing in
+                existing.0 == notification.0 &&
+                existing.1 == generateNotificationBody(reminderID: notification.1, offset: notification.2)
+            }
+            if !exists {
+                let body = generateNotificationBody(reminderID: notification.1, offset: notification.2)
+                let id = scheduleNotification(at: notification.0, body: body)
+                print("Current time is: \(now), notification Scheduled at: \(notification.0) with body: \(body) and id: \(id)")
+                if let index = reminders.firstIndex(where: {$0.id == notification.1}) {
+                    let r = reminders[index]
+                    if !r.notificationIDs.contains(id) {
+                        r.notificationIDs.append(id)
+                    }
+                    reminders[index] = r
+                }
+            }
+        }
+        
     }
     
     func removeNotificationsFor(reminderID: UUID) {
