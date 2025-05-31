@@ -156,7 +156,8 @@ class ReminderManager: ObservableObject {
     private func calculateNotifications() {
         let now = Date()
         
-        var userNotificationTimes: [(TimeInterval, Bool)] = []
+        var userNotificationTimes: [TimeInterval] = []
+        var repeatingUserNotificationTimes: [(Date, TimeInterval, TimeInterval)] = []
         var userNotificationIDs: [UUID] = []
         var generatedNotificationIDs: [UUID] = []
         
@@ -164,9 +165,37 @@ class ReminderManager: ObservableObject {
             let dueDate = reminder.goalDate
             var absoluteUserNotificationTimes: [Date] = []
             let repeating: Bool = reminder.repeatTrigger == .atDueDate
+            var repeatInterval: TimeInterval = 0
+            
+            let repeatRule = reminder.repeatRule
+            if repeating,
+               let unit = reminder.repeatRule?.unit,
+               let value = repeatRule?.value {
+                switch unit {
+                case .minute:
+                    repeatInterval = TimeInterval(value * 60)
+                case .hour:
+                    repeatInterval = TimeInterval(value * 60 * 60)
+                case .day:
+                    repeatInterval = TimeInterval(value * 60 * 60 * 24)
+                case .week:
+                    repeatInterval = TimeInterval(value * 60 * 60 * 24 * 7)
+                case .month:
+                    repeatInterval = TimeInterval(value * 60 * 60 * 24 * 7 * 30)
+                case .year:
+                    repeatInterval = TimeInterval(value * 60 * 60 * 24 * 7 * 30 * 365)
+                }
+            }
             
             for notificationTime in reminder.notificationTimes {
-                userNotificationTimes.append((notificationTime, repeating))
+                
+                if repeating {
+                    repeatingUserNotificationTimes.append((reminder.goalDate, notificationTime, repeatInterval))
+                    
+                } else {
+                    userNotificationTimes.append(notificationTime)
+
+                }
                 absoluteUserNotificationTimes.append(dueDate.addingTimeInterval(-notificationTime))
             }
             
@@ -190,7 +219,14 @@ class ReminderManager: ObservableObject {
                 
             }
         }
+        var uncutRepeatingNotificationTimes: [Date] = []
         
+        for time in repeatingUserNotificationTimes {
+            
+            for i in 0..<64 {
+                
+            }
+        }
         
     }
     
