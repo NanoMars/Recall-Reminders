@@ -1,13 +1,20 @@
-# Reminders App (working title)
+<div align="center">
+  <a href="https://apps.apple.com/au/app/recall-reminders/id6746973146">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://hc-cdn.hel1.your-objectstorage.com/s/v3/e3b397ca96816549ce4b44fcc7a5bfc66b8fd4b4_reminders_app_logo_rounded_corners__1_.png">
+      <img alt="Download on the App Store" src="https://hc-cdn.hel1.your-objectstorage.com/s/v3/e3b397ca96816549ce4b44fcc7a5bfc66b8fd4b4_reminders_app_logo_rounded_corners__1_.png" height="250">
+    </picture>
+  </a>
+  <h1>Recall Reminders</h1>
 
-I'm building this app because I dislike the default reminders app on IOS.
+  <a href="https://github.com/NanoMars/Recall-Reminders"><img alt="License" src="https://img.shields.io/github/license/NanoMars/Recall-Reminders?style=for-the-badge"></a>
+  <a href="https://github.com/NanoMars/Recall-Reminders/issues"><img alt="Issues" src="https://img.shields.io/github/issues/NanoMars/Recall-Reminders?style=for-the-badge"></a>
+</div>
 
-I think being able to see how much time is left on a reminder at a glance is an unexplored way to stay on track
+**Recall Reminders** is an app I've been dreaming about for a while now. Whether it's an anniversary or deadline, Recall Reminders keeps everything organised and at your fingertips.
+
 
 I have used some packages to help develop this app. Attribution for those packages can be accessed at this [link](Attribution.md)
-
-## Screenshots
-
-![screenshot 1](https://hc-cdn.hel1.your-objectstorage.com/s/v3/949988c6e3b72044e7164ca5ada1ccdc2daff996_screenshot_2025-05-13_at_9.23.09___pm.png) ![screenshot 2](https://hc-cdn.hel1.your-objectstorage.com/s/v3/8d6835e1fbd67827c421c2f735725c7286ef7622_screenshot_2025-05-13_at_9.23.25___pm.png) ![screenshot 3](https://hc-cdn.hel1.your-objectstorage.com/s/v3/4b7d0d5ad57ab5a705e2f3a9ddcaefba5355f286_screenshot_2025-05-13_at_9.23.36___pm.png) ![screenshot 4](https://hc-cdn.hel1.your-objectstorage.com/s/v3/e3de467f0dc82c32d4e98a6478eedc601b72c7e4_screenshot_2025-05-13_at_9.24.21___pm.png)
-
    
+
+[![Download on the App Store](https://toolbox.marketingtools.apple.com/api/assets/featured-content/apps/badges/badge-2/en-us.svg)](https://apps.apple.com/au/app/recall-reminders/id6746973146)

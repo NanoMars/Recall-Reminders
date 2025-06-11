@@ -13,13 +13,33 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		775F8C2A2DC73D09001B0FFF /* Reminders App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Reminders App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		775F8C2A2DC73D09001B0FFF /* Recall Reminders.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Recall Reminders.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		775F1D492DF7D18E002BB774 /* recall reminders */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "recall reminders";
+			sourceTree = "<group>";
+		};
+		775F1D582DF7D224002BB774 /* recall reminders */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "recall reminders";
+			sourceTree = "<group>";
+		};
+		775F1D672DF7D2EA002BB774 /* recall reminders */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "recall reminders";
+			sourceTree = "<group>";
+		};
 		775F8C2C2DC73D09001B0FFF /* Reminders App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "Reminders App";
+			sourceTree = "<group>";
+		};
+		77FB5D1C2DF57DD500214602 /* RemindersApp */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = RemindersApp;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -42,6 +62,10 @@
 			isa = PBXGroup;
 			children = (
 				775F8C2C2DC73D09001B0FFF /* Reminders App */,
+				77FB5D1C2DF57DD500214602 /* RemindersApp */,
+				775F1D492DF7D18E002BB774 /* recall reminders */,
+				775F1D582DF7D224002BB774 /* recall reminders */,
+				775F1D672DF7D2EA002BB774 /* recall reminders */,
 				775F8C2B2DC73D09001B0FFF /* Products */,
 			);
 			sourceTree = "<group>";
@@ -49,7 +73,7 @@
 		775F8C2B2DC73D09001B0FFF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				775F8C2A2DC73D09001B0FFF /* Reminders App.app */,
+				775F8C2A2DC73D09001B0FFF /* Recall Reminders.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -57,9 +81,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		775F8C292DC73D09001B0FFF /* Reminders App */ = {
+		775F8C292DC73D09001B0FFF /* Recall Reminders */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 775F8C352DC73D0B001B0FFF /* Build configuration list for PBXNativeTarget "Reminders App" */;
+			buildConfigurationList = 775F8C352DC73D0B001B0FFF /* Build configuration list for PBXNativeTarget "Recall Reminders" */;
 			buildPhases = (
 				775F8C262DC73D09001B0FFF /* Sources */,
 				775F8C272DC73D09001B0FFF /* Frameworks */,
@@ -72,14 +96,14 @@
 			fileSystemSynchronizedGroups = (
 				775F8C2C2DC73D09001B0FFF /* Reminders App */,
 			);
-			name = "Reminders App";
+			name = "Recall Reminders";
 			packageProductDependencies = (
 				77DDAD492DC9A75A00333262 /* SymbolPicker */,
 				77BAEF0B2DD6F9350084053D /* Toasts */,
 				775EB3E12DE6C617008F0A36 /* OnboardingKit */,
 			);
 			productName = "Reminders App";
-			productReference = 775F8C2A2DC73D09001B0FFF /* Reminders App.app */;
+			productReference = 775F8C2A2DC73D09001B0FFF /* Recall Reminders.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -116,7 +140,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				775F8C292DC73D09001B0FFF /* Reminders App */,
+				775F8C292DC73D09001B0FFF /* Recall Reminders */,
 			);
 		};
 /* End PBXProject section */
@@ -269,26 +293,28 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = HJJYPBG8DH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = RemindersApp;
+				INFOPLIST_KEY_CFBundleDisplayName = "Recall Reminders";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.armand.Reminders-App";
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.armand.recallreminders;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -298,26 +324,28 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEVELOPMENT_TEAM = HJJYPBG8DH;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = RemindersApp;
+				INFOPLIST_KEY_CFBundleDisplayName = "Recall Reminders";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.armand.Reminders-App";
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.armand.recallreminders;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -333,7 +361,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		775F8C352DC73D0B001B0FFF /* Build configuration list for PBXNativeTarget "Reminders App" */ = {
+		775F8C352DC73D0B001B0FFF /* Build configuration list for PBXNativeTarget "Recall Reminders" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				775F8C362DC73D0B001B0FFF /* Debug */,

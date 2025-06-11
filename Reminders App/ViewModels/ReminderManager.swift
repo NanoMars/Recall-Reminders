@@ -262,9 +262,11 @@ class ReminderManager: ObservableObject {
         group.wait()
         //let preExistingNotifications = UNUserNotificationCenter.current()
         
-        let desiredNotifications = uncutRepeatingNotificationTimes + userNotificationTimes
+        let allNotifications = uncutRepeatingNotificationTimes + userNotificationTimes
             .filter { $0.0 > now }
             .sorted { $0.0 < $1.0 }
+        
+        let desiredNotifications = allNotifications
             .prefix(freeSpace)
         
         for notification in existingNotifications {
